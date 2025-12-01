@@ -17,7 +17,7 @@ export const LocaleFilter: FC<LocaleFilterProps> = ({
 
     if (isLoading) {
         return (
-            <span className={classNames(filterStyles.selectFilter, '.seleton-container', className)}>
+            <span className={classNames(filterStyles.selectFilter, 'skeleton-container', className)}>
                 <div className={classNames(filterStyles.labelSkeleton, 'skeleton')} />
                 <div className={classNames(filterStyles.controlSkeleton, 'skeleton')} />
             </span>

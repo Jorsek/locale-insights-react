@@ -47,13 +47,10 @@ The application uses Redux Toolkit with RTK Query for state management:
 - **API Slices**:
   - `insightsSummaryApi`: Fetches summary data for charts and overview
   - `insightsDetailsApi`: Infinite query for paginated resource details table
-- **State Slices**:
-  - `insightsFilterSlice`: Manages filter state (status, locale, metadata, jobId)
-  - `columnSlice`: Manages visible/hidden columns in details table
 
 ### Key Data Flow
 
-1. User selects filters → updates `insightsFilterSlice`
+1. User selects filters → updates filter state
 2. Filter changes trigger RTK Query endpoints:
    - Summary API fetches aggregate data for charts
    - Details API fetches paginated resource list with infinite scroll

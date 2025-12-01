@@ -9,7 +9,7 @@ import { http, HttpResponse } from 'msw';
 import { LocaleFilter } from './LocaleFilter';
 import * as activeLocalesApiModule from '../../state/activeLocalesApi';
 import { config } from '../../config';
-import * as filterContext from 'src/context/filterContext';
+import * as filterContext from '../filterContext';
 
 // Mock locales data
 const mockLocales = [
@@ -23,7 +23,7 @@ const mockLocales = [
 const mockUpdateFilter = vi.fn();
 const mockClearFilter = vi.fn();
 
-vi.mock('src/context/filterContext', () => ({
+vi.mock('../filterContext', () => ({
     useFilter: vi.fn()
 }));
 
@@ -59,8 +59,14 @@ beforeAll(() => {
 beforeEach(() => {
     mockUseFilter.mockReturnValue({
         currentFilters: {},
+        activeFilters: [],
         updateFilter: mockUpdateFilter,
         clearFilter: mockClearFilter,
+        clearFilterIfNotActive: vi.fn(),
+        applyFilter: vi.fn(),
+        resetFilter: vi.fn(),
+        addFilter: vi.fn(),
+        removeFilter: vi.fn(),
     });
 });
 
@@ -110,7 +116,7 @@ describe('LocaleFilter', () => {
         renderWithProviders(<LocaleFilter />);
 
         await waitFor(() => {
-            expect(screen.getByText(/An error occured while tryiing to load the locale filter/i)).toBeInTheDocument();
+            expect(screen.getByText(/Unable to fetch locales/i)).toBeInTheDocument();
         });
     });
 
@@ -153,14 +159,20 @@ describe('LocaleFilter', () => {
         });
 
         const select = screen.getByRole('combobox') as HTMLSelectElement;
-        expect(select.value).toBe('');
+        expect(select.value).toBe('[ALL]');
     });
 
     it('pre-selects the locale from currentFilters', async () => {
         mockUseFilter.mockReturnValue({
             currentFilters: { localeCode: 'fr' },
+            activeFilters: [],
             updateFilter: mockUpdateFilter,
             clearFilter: mockClearFilter,
+            clearFilterIfNotActive: vi.fn(),
+            applyFilter: vi.fn(),
+            resetFilter: vi.fn(),
+            addFilter: vi.fn(),
+            removeFilter: vi.fn(),
         });
 
         renderWithProviders(<LocaleFilter />);
@@ -194,8 +206,14 @@ describe('LocaleFilter', () => {
 
         mockUseFilter.mockReturnValue({
             currentFilters: { localeCode: 'fr' },
+            activeFilters: [],
             updateFilter: mockUpdateFilter,
             clearFilter: mockClearFilter,
+            clearFilterIfNotActive: vi.fn(),
+            applyFilter: vi.fn(),
+            resetFilter: vi.fn(),
+            addFilter: vi.fn(),
+            removeFilter: vi.fn(),
         });
 
         renderWithProviders(<LocaleFilter />);
@@ -205,7 +223,7 @@ describe('LocaleFilter', () => {
         });
 
         const select = screen.getByRole('combobox');
-        await user.selectOptions(select, '');
+        await user.selectOptions(select, '[ALL]');
 
         expect(mockClearFilter).toHaveBeenCalledWith('localeCode');
         expect(mockClearFilter).toHaveBeenCalledTimes(1);
@@ -232,7 +250,7 @@ describe('LocaleFilter', () => {
         expect(mockUpdateFilter).toHaveBeenCalledWith('localeCode', 'fr');
 
         // Clear selection
-        await user.selectOptions(select, '');
+        await user.selectOptions(select, '[ALL]');
         expect(mockClearFilter).toHaveBeenCalledWith('localeCode');
 
         expect(mockUpdateFilter).toHaveBeenCalledTimes(2);
@@ -282,7 +300,7 @@ describe('LocaleFilter', () => {
         const label = container.querySelector('label');
         const select = container.querySelector('select');
 
-        expect(label).toHaveAttribute('id', 'label');
-        expect(select).toHaveAttribute('id', 'control');
+        expect(label).toHaveAttribute('id', 'label-localeCode');
+        expect(select).toHaveAttribute('id', 'control-localeCode');
     });
 });

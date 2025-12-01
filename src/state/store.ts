@@ -1,15 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit"
 import { insightsSummaryApi } from "./insightsSummaryApi"
-import { insightsFilterReducer } from "./insightsFilterSlice"
 import { insightsDetailsApi } from "./insightDetailsApi"
-import { detailColumnSlice } from "./columnSlice"
 import { activeLocalesApi } from "./activeLocalesApi"
 import { configSlice } from "./configSlice"
 
 const store = configureStore({
   reducer: {
-    insightsFilter: insightsFilterReducer,
-    [detailColumnSlice.name]: detailColumnSlice.reducer,
     [insightsDetailsApi.reducerPath]: insightsDetailsApi.reducer,
     [insightsSummaryApi.reducerPath]: insightsSummaryApi.reducer,
     [activeLocalesApi.reducerPath]: activeLocalesApi.reducer,

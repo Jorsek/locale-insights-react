@@ -1,5 +1,5 @@
 import type { FC, MouseEvent } from "react";
-import { useFilter } from "src/context/filterContext";
+import { useFilter } from "../filterContext";
 import classNames from "classnames";
 import filterStyles from '../filters.module.css'
 

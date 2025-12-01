@@ -1,7 +1,6 @@
 import { useMemo, useState, type FC, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { filterContext, type FilterContext } from 'src/context/filterContext';
-import { FilterActions, FilterChooser, FilterItem } from 'src/filters';
+import { filterContext, type FilterContext, FilterActions, FilterChooser, FilterItem } from 'src/filters';
 import '../dashboard.css';
 import { config } from 'src/config';
 import { selectActiveFilters, setActiveFilters, setFilters } from 'src/state/configSlice';

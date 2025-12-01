@@ -1,6 +1,6 @@
 import { useEffect, useState, type ChangeEvent, type FC } from "react";
-import { useFilter } from "src/context/filterContext";
-import { ALL_FILTERS } from "src/filters/reportFilters";
+import { useFilter } from "../filterContext";
+import { ALL_FILTERS } from "../reportFilters";
 import filterStyles from '../filters.module.css';
 import classNames from "classnames";
 

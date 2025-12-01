@@ -5,3 +5,4 @@ export { FilterItem } from './FilterItem/FilterItem';
 export { FilterChooser } from './FilterChooser/FilterChooser';
 export { AutoFilter, type AutoFilterProps } from './AutoFilter/AutoFilter';
 export { FilterActions, type FilterActionsProps } from './FilterActions/FilterActions';
+export { filterContext, createFilterContext, useFilter, type FilterContext, type Filters } from './filterContext';

@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import type { FC, MouseEvent } from "react";
-import { useFilter } from "src/context/filterContext"
-import type { ReportFilter } from "src/filters/reportFilters"
+import { useFilter } from "../filterContext"
+import type { ReportFilter } from "../reportFilters"
 import filterStyles from '../filters.module.css';
 
 interface FilterItemProps {

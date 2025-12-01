@@ -1,5 +1,5 @@
 import { useEffect, type ChangeEvent, type FC } from 'react';
-import { useFilter } from 'src/context/filterContext';
+import { useFilter } from '../filterContext';
 import filterStyles from '../filters.module.css';
 import classNames from 'classnames';
 

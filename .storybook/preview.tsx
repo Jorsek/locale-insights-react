@@ -3,9 +3,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { insightsSummaryApi } from '../src/state/insightsSummaryApi';
-import { insightsFilterReducer } from '../src/state/insightsFilterSlice';
 import { insightsDetailsApi } from '../src/state/insightDetailsApi';
-import { detailColumnSlice } from '../src/state/columnSlice';
 import { activeLocalesApi } from '../src/state/activeLocalesApi';
 import { initialize, mswLoader } from 'msw-storybook-addon';
 import { handlers } from './mocks/handlers';
@@ -16,8 +14,6 @@ initialize();
 // Factory function to create a store for Storybook
 const createStorybookStore = () => configureStore({
   reducer: {
-    insightsFilter: insightsFilterReducer,
-    [detailColumnSlice.name]: detailColumnSlice.reducer,
     [insightsDetailsApi.reducerPath]: insightsDetailsApi.reducer,
     [insightsSummaryApi.reducerPath]: insightsSummaryApi.reducer,
     [activeLocalesApi.reducerPath]: activeLocalesApi.reducer,

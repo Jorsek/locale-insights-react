@@ -2,13 +2,13 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MetadataFilter } from './MetadataFilter';
-import * as filterContext from 'src/context/filterContext';
+import * as filterContext from '../filterContext';
 
 // Mock the useFilter hook
 const mockUpdateFilter = vi.fn();
 const mockClearFilter = vi.fn();
 
-vi.mock('src/context/filterContext', () => ({
+vi.mock('../filterContext', () => ({
     useFilter: vi.fn()
 }));
 
@@ -25,8 +25,14 @@ describe('MetadataFilter', () => {
         vi.clearAllMocks();
         mockUseFilter.mockReturnValue({
             currentFilters: {},
+            activeFilters: [],
             updateFilter: mockUpdateFilter,
             clearFilter: mockClearFilter,
+            clearFilterIfNotActive: vi.fn(),
+            applyFilter: vi.fn(),
+            resetFilter: vi.fn(),
+            addFilter: vi.fn(),
+            removeFilter: vi.fn(),
         });
     });
 
@@ -241,8 +247,9 @@ describe('MetadataFilter', () => {
         const label = container.querySelector('label');
         const select = container.querySelector('select');
 
-        expect(label).toHaveClass('label');
-        expect(select).toHaveClass('control');
+        // CSS modules generate hashed class names
+        expect(label?.className).toContain('label');
+        expect(select?.className).toContain('control');
     });
 
     it('has correct id attributes for accessibility', () => {

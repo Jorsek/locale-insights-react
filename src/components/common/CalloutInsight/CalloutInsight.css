@@ -1,0 +1,57 @@
+:root {
+    --color-callout-border: #e5e7eb;
+    --color-callout-background: #ffffff;
+    --color-callout-label: #6b7280;
+    --color-callout-value: #111827;
+    --color-callout-icon-background: #dbeafe;
+    --color-callout-icon-color: #2563eb;
+}
+
+.callout-insight {
+    display: flex;
+    gap: 2em;
+    padding: 1.5em;
+    border: 1px solid var(--color-callout-border, #e5e7eb);
+    border-radius: 0.5rem;
+    background-color: var(--color-callout-background, #ffffff);
+    align-items: center;
+}
+
+.callout-insight .icon {
+    font-family: 'Material Symbols Rounded';
+    font-size: 1.75rem;
+    flex-shrink: 1;
+    flex-grow: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2em;
+    height: 2em;
+    background-color: var(--color-callout-icon-background, #dbeafe);
+    color: var(--color-callout-icon-color, #2563eb);
+    padding: 0;
+    margin: 0;
+    border-radius: 0.5rem;
+    font-weight: normal;
+}
+
+.callout-insight .content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex-grow: 1;
+}
+
+.callout-insight .label {
+    margin: 0;
+    font-size: 1.2em;
+    color: var(--color-callout-label, #6b7280);
+    font-weight: 500;
+}
+
+.callout-insight .value {
+    margin: 0;
+    font-size: 1.875em;
+    color: var(--color-callout-value, #111827);
+    font-weight: 600;
+}

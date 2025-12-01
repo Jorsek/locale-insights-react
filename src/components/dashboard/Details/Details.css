@@ -1,0 +1,92 @@
+.dashboard-details {
+    display: grid;
+    width: 100%;
+    table-layout: fixed;
+    flex-grow: 1;
+    font-size: .8em;
+    column-gap: .5em;
+    row-gap: .25em;
+}
+
+.dashboard-details thead,
+.dashboard-details tbody,
+.dashboard-details tfoot,
+.dashboard-details tr {
+    display: contents;
+}
+
+.dashboard-details tr>td,
+.dashboard-details tr>th {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.dashboard-details tr {
+    border-top: 1px solid gray;
+    background-color: red;
+}
+
+.x-container {
+    overflow-y: scroll;
+    overflow-x: auto;
+    padding: 1rem;
+    flex-grow: 1;
+    max-height: 20em;
+}
+
+.dashboard-details th {
+    font-weight: bold;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    padding: .25rm .5em;
+    user-select: none;
+}
+
+.dashboard-details th span {
+    flex-grow: 1;
+    text-align: left;
+    position: relative;
+    padding-right: 2ch;
+}
+
+.dashboard-details th.sortable {
+    cursor: pointer;
+}
+
+
+.dashboard-details th.asc span::after,
+.dashboard-details th.desc span::after {
+    content: '▼';
+    position: absolute;
+    padding-left: 1ch;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    width: 1rm;
+    height: 1em;
+    justify-content: center;
+    right: 1ch;
+    top: 0;
+}
+
+.dashboard-details th.desc span::after {
+    content: '▲';
+}
+
+.dashboard-details th.remoovable button {
+    border: none;
+    outline: none;
+    background: none;
+    color: darkgray;
+    border-radius: .5em;
+    cursor: pointer;
+}
+
+.dashboard-details th.remoovable button:hover {
+    background-color: rgba(0, 0, 0, .12);
+    color: black;
+}

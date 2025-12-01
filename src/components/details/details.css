@@ -1,0 +1,27 @@
+:root {
+    --color-error-callout-text: #8b3a3a;
+    --color-error-callout-border: #f56b6b;
+    --color-error-callout-bg: #ffe5e5;
+}
+
+.detail-callouts {
+    display: grid;
+    gap: 1.5em;
+    grid-template-columns: repeat(3, 1fr);
+    flex-grow: 1;
+    width: 100%;
+}
+
+.error-callout {
+    border-color: var(--color-error-callout-border, #f56b6b);
+    color: var(--color-error-callout-text, #8b3a3a);
+}
+
+.error-callout .icon {
+    background-color: var(--color-error-callout-bg, #ffe5e5);
+    color: var(--color-error-callout-text, #8b3a3a);
+}
+
+.error-callout .value {
+    color: var(--color-error-callout-text, #8b3a3a);
+}

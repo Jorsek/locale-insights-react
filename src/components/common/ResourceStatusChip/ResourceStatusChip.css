@@ -1,0 +1,44 @@
+:root {
+    --color-status-current-text: #1a6f4f;
+    --color-status-current-border: #26c485;
+    --color-status-current-bg: #d4f5e8;
+
+    --color-status-missing-text: #8b3a3a;
+    --color-status-missing-border: #f56b6b;
+    --color-status-missing-bg: #ffe5e5;
+
+    --color-status-outdated-text: #8b6f1f;
+    --color-status-outdated-border: #ffd93d;
+    --color-status-outdated-bg: #fff8d4;
+}
+
+.resource-status-chip {
+    border-width: 1px;
+    border-style: solid;
+    border-radius: .5em;
+    padding: .2rem .75rem;
+    font-weight: 500;
+    font-size: 0.875em;
+    display: inline-block;
+}
+
+/* Current - Green (up to date) */
+.resource-status-chip.current {
+    color: var(--color-status-current-text);
+    border-color: var(--color-status-current-border);
+    background-color: var(--color-status-current-bg);
+}
+
+/* Missing - Red (not translated) */
+.resource-status-chip.missing {
+    color: var(--color-status-missing-text);
+    border-color: var(--color-status-missing-border);
+    background-color: var(--color-status-missing-bg);
+}
+
+/* Outdated - Yellow/Orange (needs updating) */
+.resource-status-chip.out-of-data {
+    color: var(--color-status-outdated-text);
+    border-color: var(--color-status-outdated-border);
+    background-color: var(--color-status-outdated-bg);
+}

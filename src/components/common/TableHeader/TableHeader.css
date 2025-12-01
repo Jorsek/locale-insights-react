@@ -1,0 +1,14 @@
+.table-header {
+    display: contents;
+    padding-bottom: .24rem;
+    border-bottom: 1px solid red;
+    box-sizing: border-box;
+}
+
+.table-header:hover {
+    background-color: rgba(0, 0, 0, .12);
+}
+
+.table-header>tr {
+    display: contents;
+}

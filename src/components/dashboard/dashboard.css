@@ -1,0 +1,132 @@
+:root {
+    --color-error-callout-text: #8b3a3a;
+    --color-error-callout-border: #f56b6b;
+    --color-error-callout-bg: #ffe5e5;
+}
+
+.detail-callouts {
+    display: grid;
+    gap: 1.5em;
+    grid-template-columns: repeat(3, 1fr);
+    flex-grow: 1;
+    width: 100%;
+}
+
+.error-callout {
+    border-color: var(--color-error-callout-border, #f56b6b);
+    color: var(--color-error-callout-text, #8b3a3a);
+}
+
+.error-callout .icon {
+    background-color: var(--color-error-callout-bg, #ffe5e5);
+    color: var(--color-error-callout-text, #8b3a3a);
+}
+
+.error-callout .value {
+    color: var(--color-error-callout-text, #8b3a3a);
+}
+
+
+/* filters */
+
+.dashboard-filter {
+    margin: 0;
+    display: grid;
+    grid-template-areas: "label control expand";
+    padding: .25em 1em;
+    background-color: rgba(0, 0, 0, .08);
+    border: 1px solid rgba(0, 0, 0, .12);
+    align-items: center;
+    border-radius: .5em;
+    width: max-content;
+    user-select: none;
+    font-size: .8rem;
+}
+
+.dashboard-filter #expand,
+.dashboard-filter .expand {
+    grid-area: expand;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    margin-left: 1em;
+}
+
+.dashboard-filters,
+.dashboard-charts {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    flex-direction: row;
+    gap: 1rm;
+}
+
+.dashboard-filters #filter-list,
+.dashboard-charts .chart-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+    flex-grow: 1;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dashboard-charts .chart-list {
+    gap: 1.5rem;
+}
+
+.dashboard-filters #filter-list>*,
+.dashboard-charts .chart-list>* {
+    flex-grow: 0;
+}
+
+.dashboard-filters #filter-actions {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 1rem;
+    align-items: flex-start;
+    justify-content: flex-end;
+    flex-shrink: 1;
+}
+
+.dashboard-filters #add-filter {
+    background: none;
+    border: 1px solid lightblue;
+    max-width: max-content;
+}
+
+/* charts */
+
+.dashboard-charts .dashboard-chart {
+    display: inline-flex;
+    align-items: stretch;
+    justify-content: start;
+    margin: 0;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+    gap: .5rem;
+}
+
+.dashboard-charts .dashboard-chart>header {
+    font-size: 1.5em;
+}
+
+.dashboard-charts .dashboard-chart.large {
+    max-width: max(66%, 40rem);
+}
+
+.dashboard-charts .dashboard-chart.small {
+    max-width: max(33%, 20rem);
+}
+
+.dashboard-item {
+    border: 1px solid rgba(0, 0, 0, .12);
+    border-radius: 1rem;
+    padding: 1rem;
+    background-color: white;
+}

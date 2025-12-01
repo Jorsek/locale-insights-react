@@ -1,0 +1,39 @@
+/* skeletons */
+
+.skeleton {
+    display: inline-block;
+    width: var(--w, 100%);
+    height: var(--h, 1em);
+    border-radius: var(--r, .5em);
+    background: var(--skeleton-color, rgba(0, 0, 0, .20));
+    position: relative;
+    animation: pulse 1.2s ease-in-out infinite;
+    overflow: hidden;
+}
+
+.skeleton-container .skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, tranparent, rgba(255, 255, 255, 0.5), tranparent);
+    transform: translateX(-100%);
+    animation: shine 1.2s linear infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: .55;
+    }
+
+    50% {
+        opacity: 1
+    }
+}
+
+@keyframes shine {
+    to {
+        transform: translateX(100%);
+    }
+}

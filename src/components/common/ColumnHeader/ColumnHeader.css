@@ -1,0 +1,78 @@
+.sortable-header {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    width: 100%;
+}
+
+.sortable-header:not(.unsortable):hover {
+    background-color: rgba(0, 0, 0, .12);
+}
+
+.sortable-header *:first-child {
+    flex-grow: 1;
+    text-align: left;
+    padding: 0 .25em;
+    position: relative;
+}
+
+.sortable-header.loading {
+    pointer-events: none;
+    color: rgba(0, 0, 0, .5);
+}
+
+.sortable-header *:first-child::before {
+    content: ' ';
+    width: 1.5ch;
+    padding-right: 1ch;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    font-size: .8em;
+    position: absolute;
+    left: -2ch;
+}
+
+.sortable-header.asc *:first-child::before {
+    content: '▼';
+}
+
+.sortable-header.desc *:first-child::before {
+    content: '▲';
+}
+
+.sortable-header button.removable {
+    margin-left: 1ch;
+    flex-shrink: 1;
+    border: none;
+    background: none;
+    outline: none;
+    color: slateblue;
+    cursor: pointer;
+    border-radius: .33em;
+}
+
+.sortable-header:not(.loading) button.removable:hover {
+    color: black;
+    background-color: rgba(0, 0, 0, .12);
+}
+
+.sortable-header.unsortable {
+    cursor: unset;
+    pointer-events: none;
+}
+
+.sortable-header.unsortable::before {
+    content: ' ';
+    visibility: hidden;
+}
+
+.sortable-header.removable {
+    pointer-events: unset;
+    cursor: unset;
+}

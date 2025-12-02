@@ -1,6 +1,10 @@
 .header {
     padding: .25em .5em;
     user-select: none;
+    border-bottom: 1px solid lightgray;
+}
+
+.header.header-sortable {
     cursor: pointer;
 }
 

@@ -4,7 +4,7 @@ import { filterContext, type FilterContext, FilterActions, FilterChooser, Filter
 import '../dashboard.css';
 import { config } from 'src/config';
 import { selectActiveFilters, setActiveFilters, setFilters } from 'src/state/configSlice';
-import { ALL_FILTERS } from 'src/filters/reportFilters';
+import { getAllFilters } from 'src/filters/reportFilters';
 
 type FiltersType = Record<string, object | string>;
 
@@ -43,6 +43,7 @@ function updateFilterKey(current: FiltersType, key: string, value: object | stri
 }
 
 export const Filters: FC<FiltersProps> = ({ className }) => {
+    const [allFilters] = useState(getAllFilters());
     const [filter, setFilter] = useState<Record<string, string | object>>(config.defaultFilters);
     const [dirty, setDirty] = useState(false);
     const activeFilters = useSelector(selectActiveFilters);
@@ -82,9 +83,15 @@ export const Filters: FC<FiltersProps> = ({ className }) => {
             },
             removeFilter: filterId => {
                 console.log("remove filter", filterId, activeFilters);
-                dispatch(setActiveFilters(
-                    activeFilters.filter(id => id !== filterId)
-                ))
+                if (activeFilters.find(id => id === filterId)) {
+                    const reportFiler = allFilters.find(rf => rf.id === filterId);
+                    if (typeof reportFiler?.cleanup === 'function') {
+                        reportFiler.cleanup(contextValue)
+                    }
+                    dispatch(setActiveFilters(
+                        activeFilters.filter(id => id !== filterId)
+                    ))
+                }
             },
             isActive: (filterId) => !!activeFilters.find(id => id === filterId)
         }
@@ -94,7 +101,7 @@ export const Filters: FC<FiltersProps> = ({ className }) => {
         <filterContext.Provider value={contextValue}>
             <section className={`dashboard-filters ${className} dashboard-item`}>
                 <ul id="filter-list">
-                    {ALL_FILTERS
+                    {allFilters
                         .filter(filter => !filter.removable || activeFilters.find(id => filter.id === id))
                         .map(filter => <FilterItem filter={filter} className='dashboard-filter' />)
                     }

@@ -17,6 +17,7 @@ export interface SelectFilterProps {
     className?: string;
     filterId?: string;
     metadata?: boolean;
+    cleanup?: boolean;
 }
 
 export const SelectFilter: FC<SelectFilterProps> = ({
@@ -28,18 +29,19 @@ export const SelectFilter: FC<SelectFilterProps> = ({
     className,
     filterId,
     metadata,
+    cleanup
 }) => {
-    const { currentFilters, updateFilter, clearFilter, isActive } = useFilter();
+    const { currentFilters, updateFilter, clearFilter } = useFilter();
     const currentSelection = currentFilters[keyName] as string ?? '[ALL]';
 
-    useEffect(() => () => {
-        if (typeof (filterId) === 'string') {
-            if (!isActive(filterId)) {
-                console.log("clearing filter due to unmount", filterId, keyName);
+    useEffect(() => {
+        if (cleanup) {
+            return () => {
+                console.log("clearing filter due to unmount", filterId ?? '<unknown>', "key=", keyName);
                 clearFilter(keyName, metadata === true);
             }
         }
-    }, [keyName, metadata, filterId]);
+    }, [cleanup, keyName, metadata, filterId]);
 
     const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
         event.preventDefault();
@@ -80,4 +82,4 @@ export const SelectFilter: FC<SelectFilterProps> = ({
             </select>
         </span>
     );
-};
+}

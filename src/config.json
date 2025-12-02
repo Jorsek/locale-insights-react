@@ -23,104 +23,91 @@
     "OVERDIE": "Completed",
     "CANCELLED": "Cancelled"
   },
-  "localeLables": {
-    "ar": "Arabic",
-    "ar-sa": "Arabic (Saudi Arabian)",
-    "ar-eg": "Arabic (Egypt)",
-    "be": "Byelorussian",
-    "be-by": "Byelorussian",
-    "bg": "Bulgarian",
-    "bg-bg": "Bulgarian",
-    "ca": "Catalan",
-    "ca-es": "Catalan (Spain)",
-    "cs": "Czech",
-    "cs-cz": "Czech",
-    "da": "Danish",
-    "da-dk": "Danish",
-    "de": "German",
-    "de-ch": "German (Switzerland)",
-    "de-de": "German",
-    "el": "Greek",
-    "el-gr": "Greek",
-    "en": "English",
-    "en-au": "English (Australian)",
-    "en-ca": "English (Canada)",
-    "en-gb": "English (UK)",
-    "en-us": "English (USA)",
-    "es": "Spanish",
-    "es-es": "Spanish",
-    "es-co": "Columbian Spanish",
-    "es-419": "Spanish (Latin America)",
-    "et": "Estonian",
-    "et-ee": "Estonian",
-    "fi": "Finnish",
-    "fi-fi": "Finnish",
-    "fr": "French",
-    "fr-be": "French (Belgium)",
-    "fr-ca": "French (Canada)",
-    "fr-ch": "French (Switzerland)",
-    "fr-fr": "French",
-    "he": "Hebrew",
-    "he-il": "Hebrew",
-    "hr": "Croatian",
-    "hr-hr": "Croatian",
-    "hu": "Hungarian",
-    "hu-hu": "Hungarian",
-    "hi": "Hindi",
-    "hi-in": "Hindi",
-    "is": "Icelandic",
-    "is-is": "Icelandic",
-    "it": "Italian",
-    "it-ch": "Italian (Switzerland)",
-    "it-it": "Italian",
-    "ja": "Japanese",
-    "ja-jp": "Japanese",
-    "ko": "Korean",
-    "ko-kr": "Korean",
-    "lt": "Lithuanian",
-    "lt-lt": "Lithuanian",
-    "lv": "Latvian",
-    "lv-lv": "Latvian",
-    "mk": "Macedonian",
-    "mk-mk": "Macedonian",
-    "nl": "Dutch",
-    "nl-be": "Flemish",
-    "nl-nl": "Dutch",
-    "no": "Norwegian",
-    "no-no": "Norwegian",
-    "nn-no": "Norwegian (Nynorsk)",
-    "nb-no": "Norwegian (Bokmål)",
-    "pl": "Polish",
-    "pl-pl": "Polish",
-    "pt": "Portuguese",
-    "pt-br": "Portuguese (Brazil)",
-    "pt-pt": "Portuguese",
-    "ro": "Romanian",
-    "ro-ro": "Romanian",
-    "ru": "Russian",
-    "ru-ru": "Russian",
-    "sk": "Slovak",
-    "sk-sk": "Slovak",
-    "sl": "Slovenian",
-    "sl-si": "Slovenian",
-    "sr": "Serbian",
-    "sr-rs": "Serbian (Cyrillic)",
-    "sr-sp": "",
-    "sr-latn-rs": "Serbian (Latin)",
-    "sv": "Swedish",
-    "sv-se": "Swedish",
-    "th": "Thai",
-    "th-th": "Thai",
-    "tr": "Turkish",
-    "tr-tr": "Turkish",
-    "uk": "Ukrainian",
-    "uk-ua": "Ukrainian",
-    "ur": "Urdu",
-    "ur-pk": "Urdu (Pakistan)",
-    "zh": "Chinese (Hong Kong)",
-    "zh-cn": "Chinese (Simplified)",
-    "zh-hans": "",
-    "zh-tw": "Chinese (Traditional)",
-    "zh-hant": ""
+  "filters": {
+    "resource-status": {
+      "label": "L10N Status:",
+      "name": "Localization Status",
+      "type": "select",
+      "key": "localizationStatus",
+      "all": "All Statuses",
+      "values": [
+        {
+          "value": "CURRENT",
+          "label": "Current"
+        },
+        {
+          "value": "MISSING",
+          "label": "Missing"
+        },
+        {
+          "value": "OUTDATED",
+          "label": "Out-of-date"
+        }
+      ]
+    },
+    "job-0status": {
+      "label": "Job Status:",
+      "name": "Job Status",
+      "type": "select",
+      "key": "jobStatus",
+      "all": "All Statuses",
+      "values": [
+        {
+          "value:": "ACTIVE",
+          "label": "Active"
+        },
+        {
+          "value:": "COMPLETED",
+          "label": "Completed"
+        },
+        {
+          "value:": "OVERDUE",
+          "label": "Overdue"
+        },
+        {
+          "value:": "CANCELLED",
+          "label": "Cancelled"
+        }
+      ]
+    },
+    "due": {
+      "type": "select",
+      "label": "Due:",
+      "name": "Due",
+      "key": "due",
+      "all": "All Dates",
+      "values": [
+        {
+          "label": "Overdue",
+          "valie": "OVERDUE"
+        },
+        {
+          "label": "This Week",
+          "value": "THIS_WEEK"
+        },
+        {
+          "label": "This Month",
+          "value": "THIS_MONTH"
+        }
+      ]
+    },
+    "is-valid": {
+      "name": "Content Validity",
+      "label": "Content:",
+      "type": "select",
+      "metadata": true,
+      "key": "is-valid",
+      "all": true,
+      "values": [
+        {
+          "label": "Invalid",
+          "value": true
+        },
+        {
+          "label": "valid",
+          "value": false
+        }
+      ]
+    }
   }
 }

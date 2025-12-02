@@ -1,4 +1,5 @@
 export { LocaleFilter } from './LocaleFilter/LocaleFilter';
+export { JobsFilter } from './JobsFilter/JobsFilter';
 export { SelectFilter, type SelectFilterOption, type SelectFilterProps } from './SelectFilter/SelectFilter';
 export { FilterItem } from './FilterItem/FilterItem';
 export { FilterChooser } from './FilterChooser/FilterChooser';

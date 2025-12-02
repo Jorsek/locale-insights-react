@@ -1,6 +1,6 @@
 import { useEffect, useState, type ChangeEvent, type FC } from "react";
 import { useFilter } from "../filterContext";
-import { ALL_FILTERS } from "../reportFilters";
+import { getAllFilters } from "../reportFilters";
 import filterStyles from '../filters.module.css';
 import classNames from "classnames";
 
@@ -18,7 +18,7 @@ export const FilterChooser: FC<FilterChooserProps> = ({ className }) => {
     const [availableFilters, setAvailableFilters] = useState<AvailableFilter[]>([]);
 
     useEffect(() => {
-        setAvailableFilters(ALL_FILTERS
+        setAvailableFilters(getAllFilters()
             .filter(filter => !activeFilters.find(id => filter.id === id))
             .map(filter => ({
                 label: filter.name,

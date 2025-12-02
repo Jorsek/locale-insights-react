@@ -1,19 +1,19 @@
-import type { FC } from 'react';
+import { type FC } from 'react';
 import { SelectFilter, type SelectFilterOption } from '../index';
-import { useActiveLocalesQuery } from 'src/state/activeLocalesApi';
-import { config } from 'src/config';
+import { useLocalizationJobsQuery } from 'src/state/activeLocalesApi';
 import classNames from 'classnames';
 import filterStyles from '../filters.module.css';
 import 'src/skeleton.css';
 
-interface LocaleFilterProps {
+interface JobsFilterProps {
     className?: string;
+    filterId?: string;
 }
 
-export const LocaleFilter: FC<LocaleFilterProps> = ({
-    className,
+export const JobsFilter: FC<JobsFilterProps> = ({
+    className, filterId
 }) => {
-    const { data: activeLocales, isLoading, isError } = useActiveLocalesQuery();
+    const { data: jobs, isLoading, isError } = useLocalizationJobsQuery();
 
     if (isLoading) {
         return (
@@ -26,7 +26,7 @@ export const LocaleFilter: FC<LocaleFilterProps> = ({
         return (
             <span className={classNames(filterStyles.selectFilter, filterStyles.error, className)}>
                 <div>
-                    Unable to fetch locales
+                    Unable to fetch jobs
                 </div>
             </span>
         )
@@ -34,13 +34,15 @@ export const LocaleFilter: FC<LocaleFilterProps> = ({
 
     return (
         <SelectFilter
-            label='Locale(s):'
-            keyName='localeCode'
-            allLabel='All Locales'
+            label='Job(s):'
+            keyName='jobId'
+            allLabel='All Jobs'
             className={className}
-            values={activeLocales!.map(locale => ({
-                label: locale.displayName,
-                value: locale.code
+            cleanup={true}
+            filterId={filterId}
+            values={jobs!.map(job => ({
+                label: `${job.id} (${job.mapFilename})`,
+                value: job.id.toString()
             } satisfies SelectFilterOption))}
         />
     );

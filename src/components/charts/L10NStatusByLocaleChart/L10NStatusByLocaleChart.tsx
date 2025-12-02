@@ -22,7 +22,7 @@ export const L10NStatusByLocaleChart: FC<L10NStatusByLocaleChartProps> = ({
 
     useEffect(() => {
         const chartData: ChartData[] = Object.entries(insightsReport.summary).map(([localeCode, localeSummary]) => ({
-            locale: config.localeLables[localeCode] || localeCode,
+            locale: insightsReport.locales[localeCode] || localeCode,
             missing: localeSummary.summary.MISSING ?? 0,
             current: localeSummary.summary.CURRENT ?? 0,
             outdated: localeSummary.summary.OUTDATED ?? 0

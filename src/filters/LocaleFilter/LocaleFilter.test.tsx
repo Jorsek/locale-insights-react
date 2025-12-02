@@ -197,7 +197,7 @@ describe('LocaleFilter', () => {
         const select = screen.getByRole('combobox');
         await user.selectOptions(select, 'es');
 
-        expect(mockUpdateFilter).toHaveBeenCalledWith('localeCode', 'es');
+        expect(mockUpdateFilter).toHaveBeenCalledWith('localeCode', 'es', false);
         expect(mockUpdateFilter).toHaveBeenCalledTimes(1);
     });
 
@@ -225,7 +225,7 @@ describe('LocaleFilter', () => {
         const select = screen.getByRole('combobox');
         await user.selectOptions(select, '[ALL]');
 
-        expect(mockClearFilter).toHaveBeenCalledWith('localeCode');
+        expect(mockClearFilter).toHaveBeenCalledWith('localeCode', false);
         expect(mockClearFilter).toHaveBeenCalledTimes(1);
         expect(mockUpdateFilter).not.toHaveBeenCalled();
     });
@@ -243,15 +243,15 @@ describe('LocaleFilter', () => {
 
         // Select Spanish
         await user.selectOptions(select, 'es');
-        expect(mockUpdateFilter).toHaveBeenCalledWith('localeCode', 'es');
+        expect(mockUpdateFilter).toHaveBeenCalledWith('localeCode', 'es', false);
 
         // Select French
         await user.selectOptions(select, 'fr');
-        expect(mockUpdateFilter).toHaveBeenCalledWith('localeCode', 'fr');
+        expect(mockUpdateFilter).toHaveBeenCalledWith('localeCode', 'fr', false);
 
         // Clear selection
         await user.selectOptions(select, '[ALL]');
-        expect(mockClearFilter).toHaveBeenCalledWith('localeCode');
+        expect(mockClearFilter).toHaveBeenCalledWith('localeCode', false);
 
         expect(mockUpdateFilter).toHaveBeenCalledTimes(2);
         expect(mockClearFilter).toHaveBeenCalledTimes(1);

@@ -16,14 +16,14 @@ export const ALL_COLUMNS: DetailColumn[] = [
         id: 'filename',
         label: 'File Name',
         sort: 'filename',
-        width: '2fr',
+        width: 3,
         removable: false,
         render: item => item.filename,
     },
     {
         id: 'title',
         label: 'Title',
-        width: '2fr',
+        width: 2,
         removable: true,
         render: item => {
             return typeof (item?.metadata?.title) === 'string' ? (
@@ -37,7 +37,7 @@ export const ALL_COLUMNS: DetailColumn[] = [
     {
         id: 'map',
         label: 'Map',
-        width: '1.5fr',
+        width: 1,
         sort: 'mapFilename',
         removable: true,
         render: item => item.mapFilename,
@@ -53,8 +53,8 @@ export const ALL_COLUMNS: DetailColumn[] = [
     {
         id: 'jobs',
         label: 'Job(s)',
-        width: '.5fr',
-        sort: 'jobsId',
+        width: 1,
+        sort: 'job',
         removable: true,
         render: item => (
             <span>
@@ -67,7 +67,7 @@ export const ALL_COLUMNS: DetailColumn[] = [
     {
         id: 'filestatus',
         label: 'File Status',
-        width: '1fr',
+        width: 'max-contnet',
         removable: true,
         render: item => item.metadata.status ?? 'deaft',
     },
@@ -75,7 +75,7 @@ export const ALL_COLUMNS: DetailColumn[] = [
         id: 'resource-status',
         label: 'L10N Status',
         width: 'max-content',
-        sort: 'resourceState',
+        sort: 'localizationStatus',
         removable: false,
         render: item => <ResourceStatusChip status={item.localizationStatus} />,
     },

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { KeyValueFilter } from './KeyValueFilter';
+import { SelectFilter } from './SelectFilter';
 import * as filterContext from '../filterContext';
 
 // Mock the useFilter hook
@@ -14,7 +14,7 @@ vi.mock('../filterContext', () => ({
 
 const mockUseFilter = vi.mocked(filterContext.useFilter);
 
-describe('KeyValueFilter', () => {
+describe('SelectFilter', () => {
     const defaultValues = [
         { value: 'CURRENT', label: 'Current' },
         { value: 'MISSING', label: 'Missing' },
@@ -38,7 +38,7 @@ describe('KeyValueFilter', () => {
 
     it('renders with default props', () => {
         render(
-            <KeyValueFilter
+            <SelectFilter
                 keyName="status"
                 values={defaultValues}
                 includeAll={true}
@@ -52,7 +52,7 @@ describe('KeyValueFilter', () => {
 
     it('renders custom label when provided', () => {
         render(
-            <KeyValueFilter
+            <SelectFilter
                 keyName="status"
                 values={defaultValues}
                 includeAll={true}
@@ -66,7 +66,7 @@ describe('KeyValueFilter', () => {
 
     it('auto-generates label from keyName when not provided', () => {
         render(
-            <KeyValueFilter
+            <SelectFilter
                 keyName="localeCode"
                 values={defaultValues}
                 includeAll={true}
@@ -79,7 +79,7 @@ describe('KeyValueFilter', () => {
 
     it('renders all option when includeAll is true', () => {
         render(
-            <KeyValueFilter
+            <SelectFilter
                 keyName="status"
                 values={defaultValues}
                 includeAll={true}
@@ -92,7 +92,7 @@ describe('KeyValueFilter', () => {
 
     it('does not render all option when includeAll is false and allLabel is not provided', () => {
         render(
-            <KeyValueFilter
+            <SelectFilter
                 keyName="status"
                 values={defaultValues}
                 includeAll={false}
@@ -105,7 +105,7 @@ describe('KeyValueFilter', () => {
 
     it('renders all value options', () => {
         render(
-            <KeyValueFilter
+            <SelectFilter
                 keyName="status"
                 values={defaultValues}
                 includeAll={true}
@@ -134,7 +134,7 @@ describe('KeyValueFilter', () => {
         });
 
         render(
-            <KeyValueFilter
+            <SelectFilter
                 keyName="status"
                 values={defaultValues}
                 includeAll={true}
@@ -148,7 +148,7 @@ describe('KeyValueFilter', () => {
 
     it('defaults to [ALL] when no filter value is set', () => {
         render(
-            <KeyValueFilter
+            <SelectFilter
                 keyName="status"
                 values={defaultValues}
                 includeAll={true}
@@ -164,7 +164,7 @@ describe('KeyValueFilter', () => {
         const user = userEvent.setup();
 
         render(
-            <KeyValueFilter
+            <SelectFilter
                 keyName="status"
                 values={defaultValues}
                 includeAll={true}
@@ -175,7 +175,7 @@ describe('KeyValueFilter', () => {
         const select = screen.getByRole('combobox');
         await user.selectOptions(select, 'CURRENT');
 
-        expect(mockUpdateFilter).toHaveBeenCalledWith('status', 'CURRENT');
+        expect(mockUpdateFilter).toHaveBeenCalledWith('status', 'CURRENT', false);
         expect(mockUpdateFilter).toHaveBeenCalledTimes(1);
         expect(mockClearFilter).not.toHaveBeenCalled();
     });
@@ -198,7 +198,7 @@ describe('KeyValueFilter', () => {
         });
 
         render(
-            <KeyValueFilter
+            <SelectFilter
                 keyName="status"
                 values={defaultValues}
                 includeAll={true}
@@ -209,14 +209,14 @@ describe('KeyValueFilter', () => {
         const select = screen.getByRole('combobox');
         await user.selectOptions(select, '[ALL]');
 
-        expect(mockClearFilter).toHaveBeenCalledWith('status');
+        expect(mockClearFilter).toHaveBeenCalledWith('status', false);
         expect(mockClearFilter).toHaveBeenCalledTimes(1);
         expect(mockUpdateFilter).not.toHaveBeenCalled();
     });
 
     it('applies correct class names to label and select', () => {
         const { container } = render(
-            <KeyValueFilter
+            <SelectFilter
                 keyName="status"
                 values={defaultValues}
                 includeAll={true}
@@ -234,7 +234,7 @@ describe('KeyValueFilter', () => {
 
     it('has correct id attributes for accessibility', () => {
         const { container } = render(
-            <KeyValueFilter
+            <SelectFilter
                 keyName="status"
                 values={defaultValues}
                 includeAll={true}
@@ -254,7 +254,7 @@ describe('KeyValueFilter', () => {
         const user = userEvent.setup();
 
         render(
-            <KeyValueFilter
+            <SelectFilter
                 keyName="status"
                 values={defaultValues}
                 includeAll={true}
@@ -266,15 +266,15 @@ describe('KeyValueFilter', () => {
 
         // Select a value
         await user.selectOptions(select, 'CURRENT');
-        expect(mockUpdateFilter).toHaveBeenCalledWith('status', 'CURRENT');
+        expect(mockUpdateFilter).toHaveBeenCalledWith('status', 'CURRENT', false);
 
         // Change to another value
         await user.selectOptions(select, 'MISSING');
-        expect(mockUpdateFilter).toHaveBeenCalledWith('status', 'MISSING');
+        expect(mockUpdateFilter).toHaveBeenCalledWith('status', 'MISSING', false);
 
         // Clear selection
         await user.selectOptions(select, '[ALL]');
-        expect(mockClearFilter).toHaveBeenCalledWith('status');
+        expect(mockClearFilter).toHaveBeenCalledWith('status', false);
 
         expect(mockUpdateFilter).toHaveBeenCalledTimes(2);
         expect(mockClearFilter).toHaveBeenCalledTimes(1);
@@ -282,7 +282,7 @@ describe('KeyValueFilter', () => {
 
     it('uses custom allLabel text', () => {
         render(
-            <KeyValueFilter
+            <SelectFilter
                 keyName="status"
                 values={defaultValues}
                 includeAll={true}
@@ -295,7 +295,7 @@ describe('KeyValueFilter', () => {
 
     it('renders all option when allLabel is provided even if includeAll is false', () => {
         render(
-            <KeyValueFilter
+            <SelectFilter
                 keyName="status"
                 values={defaultValues}
                 includeAll={false}
@@ -315,7 +315,7 @@ describe('KeyValueFilter', () => {
         ];
 
         render(
-            <KeyValueFilter
+            <SelectFilter
                 keyName="localeCode"
                 values={localeValues}
                 includeAll={true}
@@ -326,7 +326,7 @@ describe('KeyValueFilter', () => {
         const select = screen.getByRole('combobox');
         await user.selectOptions(select, 'en');
 
-        expect(mockUpdateFilter).toHaveBeenCalledWith('localeCode', 'en');
+        expect(mockUpdateFilter).toHaveBeenCalledWith('localeCode', 'en', false);
     });
 
     it('handles numeric string values', async () => {
@@ -338,7 +338,7 @@ describe('KeyValueFilter', () => {
         ];
 
         render(
-            <KeyValueFilter
+            <SelectFilter
                 keyName="jobId"
                 values={jobValues}
                 includeAll={true}
@@ -349,14 +349,14 @@ describe('KeyValueFilter', () => {
         const select = screen.getByRole('combobox');
         await user.selectOptions(select, '1001');
 
-        expect(mockUpdateFilter).toHaveBeenCalledWith('jobId', '1001');
+        expect(mockUpdateFilter).toHaveBeenCalledWith('jobId', '1001', false);
     });
 
     it('prevents default and stops propagation on change', async () => {
         const user = userEvent.setup();
 
         render(
-            <KeyValueFilter
+            <SelectFilter
                 keyName="status"
                 values={defaultValues}
                 includeAll={true}

@@ -6,6 +6,8 @@ import { config } from 'src/config';
 import { selectFilters, selectSort, setSort } from 'src/state/configSlice';
 import { useInsightDetails } from 'src/state/insightDetailsApi';
 import "./Details.css"
+import { DetailsHeader } from 'src/details';
+import detailStyles from 'src/details/details.module.css';
 
 interface DetailsProps {
     className?: string;
@@ -63,11 +65,11 @@ const Header: FC<DetailsHeaderProps> = ({
 function buildColumnWidths(columns: DetailColumn[]): string {
     return columns.map(column => {
         if (typeof column.width === 'number') {
-            return `${column.width}f`;
+            return `${column.width}em`;
         } else if (typeof column.width === 'string') {
             return column.width;
         }
-        return '1fr';
+        return 'auto';
     }).join(' ');
 }
 
@@ -111,10 +113,6 @@ export const Details: FC<DetailsProps> = ({ className }) => {
         }
     }, [scrollOberver, hasNextPage, fetchNextPage]);
 
-    const tableStyle = {
-        gridTemplateColumns: `${buildColumnWidths(columns)}`
-    };
-
     const handleToggleSort = (column: DetailColumn, direction: 'asc' | 'desc') => {
         dispatch(setSort({
             field: column.sort!,
@@ -126,34 +124,42 @@ export const Details: FC<DetailsProps> = ({ className }) => {
         const rows = [];
         for (var i = 0; i < config.pageSize * Math.random(); ++i) {
             rows.push(
-                <tr>
-                    {columns.map(() => (
-                        <td>
+                <div key={i} style={{ display: 'contents' }}>
+                    {columns.map((column) => (
+                        <div key={column.id}>
                             <div className='skeleton' style={{ "--h": '1em', '--w': `${Math.random() * 50 + 50}%` } as any} />
-                        </td>
+                        </div>
                     ))}
-                </tr>
+                </div>
             );
         }
 
         return (
-            <table className={classNames('dashboard-details', className, 'skeleton-container')}
-                style={tableStyle}>
-                <thead>
-                    <tr>
-                        {columns.map(column => (
-                            <td>
-                                <div className='skeleton' style={{ "--h": '1em', '--w': `${column.label.length}ch` } as any} />
-                            </td>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {rows}
-                </tbody>
-            </table >
+            <div className={classNames('dashboard-details', className, 'skeleton-container')}
+                style={{ display: 'grid', gridTemplateColumns: buildColumnWidths(columns) }}>
+                <div style={{ display: 'contents' }}>
+                    {columns.map(column => (
+                        <div key={column.id}>
+                            <div className='skeleton' style={{ "--h": '1em', '--w': `${column.label.length}ch` } as any} />
+                        </div>
+                    ))}
+                </div>
+                {rows}
+            </div>
         )
     }
+
+    const gridColumns = columns
+        .map(column => {
+            if (typeof column.width === 'string') {
+                return column.width;
+            } else if (typeof column.width === 'number') {
+                return `${column.width}fr`;
+            } else {
+                return 'auto'
+            }
+        })
+        .join(' ');
 
     return (
         <section className='dashboard-item'>
@@ -161,30 +167,24 @@ export const Details: FC<DetailsProps> = ({ className }) => {
                 todod
             </div>
             <div className='x-container'>
-                <table className={classNames('dashboard-details', className)} style={tableStyle}>
-                    <thead>
-                        <tr>
-                            {columns.map(column => (
-                                <Header key={column.id} column={column} sort={sort} onToggleDirection={handleToggleSort} />
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data!
-                            .pages
-                            .flatMap(page => page.content)
-                            .map(item => (
-                                <tr key={item.id}>
-                                    {columns.map(column => (
-                                        <td>
-                                            {column.render(item)}
-                                        </td>
-                                    ))}
-                                </tr>
-                            ))
-                        }
-                    </tbody>
-                </table>
+                <div style={{ display: 'grid', gridTemplateColumns: gridColumns }} className={detailStyles.detailTable}>
+                    <DetailsHeader columns={columns}
+                        onToggleDirection={handleToggleSort}
+                        onRemove={() => { }}
+                        sort={sort}
+                    />
+                    {data!
+                        .pages
+                        .flatMap(page => page.content)
+                        .map(item => columns.map((column, index) => (
+                            <div key={column.id}
+                                className={detailStyles.detailCell}
+                                style={{ gridColumn: index + 1 }}>
+                                {column.render(item)}
+                            </div>
+                        )))
+                    }
+                </div>
                 {hasNextPage &&
                     <div ref={scrollOberver}>&nbsp;</div>
                 }

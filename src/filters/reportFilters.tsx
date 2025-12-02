@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import { LocaleFilter } from "./LocaleFilter/LocaleFilter";
-import { KeyValueFilter } from "./KeyValueFilter/KeyValueFilter";
-import { MetadataFilter } from "./MetadataFilter/MetadataFilter";
+import { SelectFilter } from "./SelectFilter/SelectFilter";
 import { config } from "src/config";
 import { AutoFilter } from "./AutoFilter/AutoFilter";
 
@@ -23,7 +22,7 @@ export const ALL_FILTERS: ReportFilter[] = [
         id: 'resource-status',
         removable: false,
         name: 'L10N Status',
-        component: <KeyValueFilter
+        component: <SelectFilter
             keyName="status"
             values={[
                 { value: 'CURRENT', label: config.resourceStatusLabels.CURRENT },
@@ -38,7 +37,9 @@ export const ALL_FILTERS: ReportFilter[] = [
         id: 'file-status',
         removable: true,
         name: 'File Status',
-        component: <MetadataFilter
+        component: <SelectFilter
+            metadata={true}
+            filterId="file-status"
             keyName="status"
             values={[
                 { value: 'approved', label: 'Approved' },
@@ -53,14 +54,16 @@ export const ALL_FILTERS: ReportFilter[] = [
         id: 'is-valid',
         removable: true,
         name: 'Content validity',
-        component: <MetadataFilter
+        component: <SelectFilter
+            filterId="is-valid"
+            metadata={true}
             keyName="is-valid"
             values={[
                 { value: 'true', label: 'Valid' },
                 { value: 'false', label: 'Invalid' },
             ]}
             includeAll
-            label="Valid Content Validtity:"
+            label="Valid Content Validity:"
         />
     },
     {

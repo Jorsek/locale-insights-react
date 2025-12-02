@@ -1,28 +1,20 @@
 import { createContext, useContext } from "react";
-import type { AppDispatch } from "src/state/store";
-
 export type Filters = Record<string, string | object>;
 
 export interface FilterContext {
-    updateFilter(key: string, value: string | object): void;
-    clearFilter(key: string): void;
-    clearFilterIfNotActive(key: string): void;
+    updateFilter(key: string, value: string | object, metadata: boolean): void;
+    clearFilter(key: string, metadata: boolean): void;
     applyFilter(): void;
     resetFilter(): void;
     addFilter(filerId: string): void;
     removeFilter(filterId: string): void;
+    isActive(fitlerId: string): boolean;
 
     currentFilters: Filters;
     activeFilters: string[];
 }
 
 export const filterContext = createContext<FilterContext | null>(null)
-
-export function createFilterContext(_dispatch: AppDispatch, currentFilters: Filters, setFilters: (filters: Filters) => void): FilterContext {
-    return {
-
-    } as any
-}
 
 export function useFilter(): FilterContext {
     const context = useContext(filterContext);

@@ -1,4 +1,4 @@
-import { useMemo, useState, type FC, useEffect } from 'react';
+import { useMemo, useState, type FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { filterContext, type FilterContext, FilterActions, FilterChooser, FilterItem } from 'src/filters';
 import '../dashboard.css';
@@ -6,8 +6,40 @@ import { config } from 'src/config';
 import { selectActiveFilters, setActiveFilters, setFilters } from 'src/state/configSlice';
 import { ALL_FILTERS } from 'src/filters/reportFilters';
 
+type FiltersType = Record<string, object | string>;
+
 interface FiltersProps {
     className?: string;
+}
+
+/**
+ * 
+ * Clear a filter from the provided instance
+ */
+function clearFilterKey(current: FiltersType, key: string, metadata: boolean): FiltersType {
+    const updated: any = { ...current };
+    if (metadata && typeof (updated.metadata) === 'object') {
+        delete updated.meatadata[key];
+    } else {
+        delete updated[key];
+    }
+    return updated;
+}
+
+/**
+ * Updates the value of key or metadata
+ */
+function updateFilterKey(current: FiltersType, key: string, value: object | string, metadata: boolean): FiltersType {
+    const updated: any = { ...current };
+    if (metadata) {
+        if (typeof (updated.metadata) !== 'object') {
+            updated.metadata = {};
+        }
+        updated.metadata[key] = value;
+    } else {
+        updated[key] = value;
+    }
+    return updated;
 }
 
 export const Filters: FC<FiltersProps> = ({ className }) => {
@@ -21,20 +53,15 @@ export const Filters: FC<FiltersProps> = ({ className }) => {
             currentFilters: filter,
             activeFilters,
 
-            clearFilter: key => {
-                const filters = { ...filter };
-                delete filters[key];
+            clearFilter: (key, metadata = false) => {
+                const filters = clearFilterKey(filter, key, metadata);
                 setFilter(filters);
                 setDirty(true);
 
             },
-            clearFilterIfNotActive: key => {
-                console.log("clear filter if not active", key)
-                setDirty(true);
-            },
-            updateFilter: (key, value) => {
-                console.log('udpate filter', key, value)
-                setFilter({ ...filter, [key]: value });
+            updateFilter: (key, value, metadata = false) => {
+                const filters = updateFilterKey(filter, key, value, metadata);
+                setFilter(filters);
                 setDirty(true);
             },
             applyFilter: () => {
@@ -44,6 +71,7 @@ export const Filters: FC<FiltersProps> = ({ className }) => {
             resetFilter: () => {
                 setFilter(config.defaultFilters);
                 dispatch(setFilters(config.defaultFilters));
+                dispatch(setActiveFilters(config.defaultActiveFilters));
                 setDirty(false);
             },
             addFilter: filterId => {
@@ -57,7 +85,8 @@ export const Filters: FC<FiltersProps> = ({ className }) => {
                 dispatch(setActiveFilters(
                     activeFilters.filter(id => id !== filterId)
                 ))
-            }
+            },
+            isActive: (filterId) => !!activeFilters.find(id => id === filterId)
         }
     ), [filter, activeFilters]);
 

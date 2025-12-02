@@ -24,17 +24,16 @@ export const insightsDetailsApi = createApi({
         },
       },
       query: ({ queryArg, pageParam }) => {
-        const sortParam = Object.entries(queryArg.sort ?? {})
+        const params = new URLSearchParams();
+        params.append('page', pageParam.toString());
+        params.append('size', config.pageSize.toString());
+
+        Object.entries(queryArg.sort ?? {})
           .map(([name, value]) => `${name},${value.toUpperCase()}`)
-          .join(",");
+          .forEach(sort => params.append('sort', sort));
 
         return {
-          url: '/detail',
-          params: {
-            page: pageParam,
-            size: config.pageSize,
-            sort: (sortParam && sortParam.length) ? sortParam : undefined,
-          },
+          url: `/detail?${params.toString()}`,
           method: "POST",
           body: queryArg.filter ?? {},
         }

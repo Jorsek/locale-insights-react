@@ -1,36 +1,45 @@
 import { useEffect, type ChangeEvent, type FC } from 'react';
 import { useFilter } from '../filterContext';
 import filterStyles from '../filters.module.css';
+import classNames from 'classnames';
 
-export interface MetadataFilterOption {
+export interface SelectFilterOption {
     value: string;
     label: string;
 }
 
-export interface MetadataFilterProps {
+export interface SelectFilterProps {
     keyName: string;
-    values: MetadataFilterOption[];
+    values: SelectFilterOption[];
     includeAll?: boolean;
-    allLabel?: string;
     label?: string;
+    allLabel?: string;
+    className?: string;
+    filterId?: string;
+    metadata?: boolean;
 }
 
-export const MetadataFilter: FC<MetadataFilterProps> = ({
+export const SelectFilter: FC<SelectFilterProps> = ({
     keyName,
     values,
     includeAll,
     label,
-    allLabel
+    allLabel,
+    className,
+    filterId,
+    metadata,
 }) => {
-    const { currentFilters, updateFilter } = useFilter();
-    const metadata = (currentFilters.metadata ?? {}) as Record<string, string>;
-    const currentSelection = metadata?.[keyName] as string ?? '[ALL]';
+    const { currentFilters, updateFilter, clearFilter, isActive } = useFilter();
+    const currentSelection = currentFilters[keyName] as string ?? '[ALL]';
 
     useEffect(() => () => {
-        const updated = { ...metadata };
-        delete updated[keyName];
-        updateFilter('metadata', updated);
-    }, [keyName]);
+        if (typeof (filterId) === 'string') {
+            if (!isActive(filterId)) {
+                console.log("clearing filter due to unmount", filterId, keyName);
+                clearFilter(keyName, metadata === true);
+            }
+        }
+    }, [keyName, metadata, filterId]);
 
     const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
         event.preventDefault();
@@ -38,26 +47,20 @@ export const MetadataFilter: FC<MetadataFilterProps> = ({
 
         const value = event.target.value;
 
-        if (value === 'all') {
-            const updatedMetadata = { ...metadata };
-            delete updatedMetadata[keyName];
-            updateFilter('metadata', updatedMetadata);
+        if (value === '[ALL]') {
+            clearFilter(keyName, metadata === true);
         } else {
-            updateFilter('metadata', {
-                ...metadata,
-                [keyName]: value
-            });
+            updateFilter(keyName, value, metadata === true);
         }
     }
 
     const displayLabel = label || `${keyName.charAt(0).toUpperCase()}${keyName.slice(1)}:`;
 
     return (
-        <span className={filterStyles.selectFilter}>
-            < label htmlFor={`control-${keyName}`
-            } id={`label-${keyName}`} className={filterStyles.label} >
+        <span className={classNames(filterStyles.selectFilter, className)}>
+            <label htmlFor={`control-${keyName}`} id={`label-${keyName}`} className={filterStyles.label}>
                 {displayLabel}
-            </label >
+            </label>
             <select
                 className={filterStyles.control}
                 id={`control-${keyName}`}
@@ -75,6 +78,6 @@ export const MetadataFilter: FC<MetadataFilterProps> = ({
                     </option>
                 ))}
             </select>
-        </span >
+        </span>
     );
 };

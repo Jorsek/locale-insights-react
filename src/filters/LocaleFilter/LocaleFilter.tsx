@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { KeyValueFilter, type KeyValueFilterOption } from '../index';
+import { SelectFilter, type SelectFilterOption } from '../index';
 import { useActiveLocalesQuery } from 'src/state/activeLocalesApi';
 import { config } from 'src/config';
 import classNames from 'classnames';
@@ -33,7 +33,7 @@ export const LocaleFilter: FC<LocaleFilterProps> = ({
     }
 
     return (
-        <KeyValueFilter
+        <SelectFilter
             label='Locale(s):'
             keyName='localeCode'
             allLabel='All Locales'
@@ -41,7 +41,7 @@ export const LocaleFilter: FC<LocaleFilterProps> = ({
             values={activeLocales!.map(locale => ({
                 label: config.localeLables[locale.code],
                 value: locale.code
-            } satisfies KeyValueFilterOption))}
+            } satisfies SelectFilterOption))}
         />
     );
 };

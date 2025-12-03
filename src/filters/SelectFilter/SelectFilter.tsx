@@ -32,7 +32,14 @@ export const SelectFilter: FC<SelectFilterProps> = ({
     cleanup
 }) => {
     const { currentFilters, updateFilter, clearFilter } = useFilter();
-    const currentSelection = currentFilters[keyName] as string ?? '[ALL]';
+    const subject: any = metadata === true ? (currentFilters.metadata ?? {}) : currentFilters;
+
+    let currentSelection = '[ALL]';
+    if (typeof subject[keyName] == 'string') {
+        currentSelection = subject[keyName];
+    } else if (Array.isArray(subject[keyName])) {
+        currentSelection = subject[keyName].at(0) ?? '[ALL]';
+    }
 
     useEffect(() => {
         if (cleanup) {
@@ -48,7 +55,6 @@ export const SelectFilter: FC<SelectFilterProps> = ({
         event.stopPropagation();
 
         const value = event.target.value;
-
         if (value === '[ALL]') {
             clearFilter(keyName, metadata === true);
         } else {

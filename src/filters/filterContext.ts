@@ -1,5 +1,6 @@
 import { createContext, useContext } from "react";
-export type Filters = Record<string, string | object>;
+
+export type Filters = Record<string, string[] | object>;
 
 export interface FilterContext {
     updateFilter(key: string, value: string | object, metadata: boolean): void;

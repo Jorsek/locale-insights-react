@@ -3,7 +3,6 @@ import { LocaleFilter } from "./LocaleFilter/LocaleFilter";
 import { SelectFilter } from "./SelectFilter/SelectFilter";
 import { config, type FilterDefinition, type Config } from "src/config";
 import { JobsFilter } from "./JobsFilter";
-import type { FilterContext } from "./filterContext";
 
 export interface ReportFilter {
     id: string,

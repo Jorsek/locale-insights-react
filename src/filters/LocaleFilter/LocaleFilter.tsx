@@ -1,7 +1,6 @@
 import type { FC } from 'react';
 import { SelectFilter, type SelectFilterOption } from '../index';
 import { useActiveLocalesQuery } from 'src/state/activeLocalesApi';
-import { config } from 'src/config';
 import classNames from 'classnames';
 import filterStyles from '../filters.module.css';
 import 'src/skeleton.css';
@@ -35,7 +34,7 @@ export const LocaleFilter: FC<LocaleFilterProps> = ({
     return (
         <SelectFilter
             label='Locale(s):'
-            keyName='localeCode'
+            keyName='locales'
             allLabel='All Locales'
             className={className}
             values={activeLocales!.map(locale => ({

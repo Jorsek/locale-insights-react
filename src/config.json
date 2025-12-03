@@ -37,7 +37,7 @@
             "label": "L10N Status:",
             "name": "Localization Status",
             "type": "select",
-            "key": "localizationStatus",
+            "key": "statuses",
             "all": "All Statuses",
             "values": [
                 {
@@ -62,19 +62,15 @@
             "all": "All Statuses",
             "values": [
                 {
-                    "value:": "ACTIVE",
+                    "value": "ACTIVE",
                     "label": "Active"
                 },
                 {
-                    "value:": "COMPLETED",
+                    "value": "COMPLETED",
                     "label": "Completed"
                 },
                 {
-                    "value:": "OVERDUE",
-                    "label": "Overdue"
-                },
-                {
-                    "value:": "CANCELLED",
+                    "value": "CANCELLED",
                     "label": "Cancelled"
                 }
             ]
@@ -88,7 +84,7 @@
             "values": [
                 {
                     "label": "Overdue",
-                    "valie": "OVERDUE"
+                    "value": "OVERDUE"
                 },
                 {
                     "label": "This Week",
@@ -110,11 +106,11 @@
             "values": [
                 {
                     "label": "Invalid",
-                    "value": true
+                    "value": false
                 },
                 {
                     "label": "valid",
-                    "value": false
+                    "value": true
                 }
             ]
         }

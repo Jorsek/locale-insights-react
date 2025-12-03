@@ -33,10 +33,9 @@ export const DetailsTable: FC<DetailsTableProps> = ({
 
     useEffect(() => {
         const observer = new IntersectionObserver((entries) => {
-            console.log("checking", entries)
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    console.log('Loading next page of insight details...');
+                    console.log('Loading next page of insight details');
                     fetchNextPage();
                     return;
                 }

@@ -4,7 +4,7 @@ import { config } from "src/config";
 import type { Filters } from "src/filters";
 
 interface DetailsParmeters {
-  filter: Record<string, string | object>,
+  filter: Record<string, string[] | object>,
   sort: Record<string, 'asc' | 'desc'>,
 }
 
@@ -16,7 +16,6 @@ export const insightsDetailsApi = createApi({
       infiniteQueryOptions: {
         initialPageParam: 0,
         getNextPageParam: (lastPage: any) => {
-          console.log('Last page received:', lastPage);
           const page = lastPage.page
           if (page.number + 1 < page.totalPages) {
             return page.number + 1;

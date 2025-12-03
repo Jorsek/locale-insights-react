@@ -152,7 +152,7 @@ export const ALL_COLUMNS: DetailColumn[] = [
                 padding: 0
             }}>
                 {item.jobs.map(jobId => (
-                    <li style={{ padding: 0, margin: 0 }}>
+                    <li key={jobId} style={{ padding: 0, margin: 0 }}>
                         <a href={`#job${jobId}`}>{jobId}</a>
                     </li>
                 ))

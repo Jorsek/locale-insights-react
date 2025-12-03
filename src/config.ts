@@ -1,5 +1,6 @@
 import type { ChipProps } from './common';
 import json_config from './config.json';
+import type { Filters } from './filters';
 import type { JobStatus, ResourceStatus } from './types';
 
 export type FilterDefinition = {
@@ -36,7 +37,7 @@ export interface ChipColumnDefinition extends ColumnDefinition {
 }
 
 export type Config = {
-    defaultFilters: Record<string, string | object>,
+    defaultFilters: Filters,
     defaultCallouts: string[],
     defaultActiveFilters: string[],
     defaultSort: Record<string, 'asc' | 'desc'>,

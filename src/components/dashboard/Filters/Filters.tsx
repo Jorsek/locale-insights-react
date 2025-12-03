@@ -1,12 +1,11 @@
 import { useMemo, useState, type FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { filterContext, type FilterContext, FilterActions, FilterChooser, FilterItem } from 'src/filters';
+import type { Filters as FiltersType } from 'src/filters';
 import '../dashboard.css';
 import { config } from 'src/config';
 import { selectActiveFilters, setActiveFilters, setFilters } from 'src/state/configSlice';
 import { getAllFilters } from 'src/filters/reportFilters';
-
-type FiltersType = Record<string, object | string>;
 
 interface FiltersProps {
     className?: string;
@@ -29,22 +28,22 @@ function clearFilterKey(current: FiltersType, key: string, metadata: boolean): F
 /**
  * Updates the value of key or metadata
  */
-function updateFilterKey(current: FiltersType, key: string, value: object | string, metadata: boolean): FiltersType {
+function updateFilterKey(current: FiltersType, key: string, value: object | string | string[], metadata: boolean): FiltersType {
     const updated: any = { ...current };
     if (metadata) {
         if (typeof (updated.metadata) !== 'object') {
             updated.metadata = {};
         }
-        updated.metadata[key] = value;
+        updated.metadata[key] = Array.isArray(value) ? value : [value];
     } else {
-        updated[key] = value;
+        updated[key] = Array.isArray(value) ? value : [value];
     }
     return updated;
 }
 
 export const Filters: FC<FiltersProps> = ({ className }) => {
     const [allFilters] = useState(getAllFilters());
-    const [filter, setFilter] = useState<Record<string, string | object>>(config.defaultFilters);
+    const [filter, setFilter] = useState<FiltersType>(config.defaultFilters);
     const [dirty, setDirty] = useState(false);
     const activeFilters = useSelector(selectActiveFilters);
     const dispatch = useDispatch();
@@ -99,7 +98,7 @@ export const Filters: FC<FiltersProps> = ({ className }) => {
                 <ul id="filter-list">
                     {allFilters
                         .filter(filter => !filter.removable || activeFilters.find(id => filter.id === id))
-                        .map(filter => <FilterItem filter={filter} className='dashboard-filter' />)
+                        .map(filter => <FilterItem key={filter.id} filter={filter} className='dashboard-filter' />)
                     }
 
 

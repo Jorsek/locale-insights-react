@@ -10,7 +10,7 @@ export const configSlice = createSlice({
         sort: config.defaultSort
     }),
     reducers: {
-        setFilters: (state, action: PayloadAction<Record<string, string | object>>) => {
+        setFilters: (state, action: PayloadAction<Record<string, string[] | object>>) => {
             state.filters = action.payload;
         },
         setActiveFilters(state, action: PayloadAction<string[]>) {

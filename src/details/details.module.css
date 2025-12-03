@@ -67,3 +67,107 @@
     white-space: nowrap;
     padding: .25em 1em;
 }
+
+.actions {
+    display: flex;
+    gap: 0.5em;
+    padding: 0.5em;
+    justify-content: flex-end;
+}
+
+.action-icon {
+    font-family: 'material symbols rounded';
+    font-size: 1.2em;
+    vertical-align: middle;
+    margin-right: 0.25em;
+}
+
+.action-download-csv,
+.action-add-column {
+    padding: 0.5em 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    cursor: pointer;
+    transition: all 200ms ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25em;
+}
+
+.action-download-csv:hover,
+.action-add-column:hover:not(:disabled) {
+    background-color: #e8e8e8;
+    border-color: #999;
+}
+
+.action-download-csv:active,
+.action-add-column:active:not(:disabled) {
+    background-color: #d8d8d8;
+}
+
+.action-add-column:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.column-chooser {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.25em;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    min-width: 180px;
+    z-index: 1000;
+    padding: 0.25em 0;
+}
+
+.column-chooser ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.column-chooser li {
+    padding: 0.5em 1em;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.9em;
+    transition: background-color 150ms ease-in-out;
+}
+
+.column-chooser li:hover {
+    background-color: #f0f0f0;
+}
+
+.column-chooser li.selected {
+    background-color: #e8f4ff;
+    color: #0066cc;
+}
+
+.column-chooser li::after {
+    content: '›';
+    font-size: 1.2em;
+    color: #999;
+    margin-left: 0.5em;
+    opacity: 0;
+}
+
+.column-chooser li.has-submenu::after {
+    opacity: 1;
+}
+
+.status {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}

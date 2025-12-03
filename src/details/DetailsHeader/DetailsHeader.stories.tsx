@@ -2,6 +2,15 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { DetailsHeader } from './DetailsHeader';
 import { fn } from 'storybook/test';
 import type { DetailColumn } from 'src/components/details/columns';
+import { columnsContext, type ColumnsContext } from '../columnsContext';
+
+// Define arg types for Storybook controls
+interface StoryArgs {
+    columns: DetailColumn[];
+    sort: Record<string, 'asc' | 'desc'>;
+    onToggleDirection: (column: DetailColumn, direction: 'asc' | 'desc') => void;
+    onRemove?: (column: DetailColumn) => void;
+}
 
 const meta = {
     title: 'Details/DetailsHeader',
@@ -16,8 +25,9 @@ const meta = {
     },
     decorators: [
         (Story, context) => {
-            const columnCount = context.args.columns?.length || 0;
-            const gridColumns = (context.args.columns ?? [])
+            const args = context.args as unknown as StoryArgs;
+            const columnCount = args.columns?.length || 0;
+            const gridColumns = (args.columns ?? [])
                 .map(column => {
                     if (typeof column.width === 'string') {
                         return column.width;
@@ -29,30 +39,52 @@ const meta = {
                 })
                 .join(' ');
 
+            // Create mock context value
+            const mockContext: ColumnsContext = {
+                activeColumns: args.columns || [],
+                sort: args.sort || {},
+                availableColumns: args.columns || [],
+                addColumn: fn(),
+                removeColumn: (columnId: string) => {
+                    if (args.onRemove) {
+                        const column = args.columns.find(c => c.id === columnId);
+                        if (column) args.onRemove(column);
+                    }
+                },
+                setSort: (column: string, direction: 'asc' | 'desc') => {
+                    if (args.onToggleDirection) {
+                        const col = args.columns.find(c => c.sort === column);
+                        if (col) args.onToggleDirection(col, direction);
+                    }
+                },
+            };
+
             return (
-                <div
-                    style={{
-                        width: '100%',
-                        border: '1px solid #ccc',
-                        gridTemplateColumns: gridColumns,
-                        display: 'grid',
-                    }}>
-                    <Story />
+                <columnsContext.Provider value={mockContext}>
                     <div
                         style={{
-                            padding: '1em',
-                            textAlign: 'center',
-                            color: '#999',
-                            borderTop: '1px solid #ddd',
-                            gridColumn: '1 / -1'
+                            width: '100%',
+                            border: '1px solid #ccc',
+                            gridTemplateColumns: gridColumns,
+                            display: 'grid',
                         }}>
-                        (Table body would appear here - {columnCount} columns)
+                        <Story />
+                        <div
+                            style={{
+                                padding: '1em',
+                                textAlign: 'center',
+                                color: '#999',
+                                borderTop: '1px solid #ddd',
+                                gridColumn: '1 / -1'
+                            }}>
+                            (Table body would appear here - {columnCount} columns)
+                        </div>
                     </div>
-                </div>
+                </columnsContext.Provider>
             );
         },
     ],
-} satisfies Meta<typeof DetailsHeader>;
+} satisfies Meta<StoryArgs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

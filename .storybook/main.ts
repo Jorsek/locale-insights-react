@@ -1,8 +1,10 @@
+// This file has been automatically migrated to valid ESM format by Storybook.
 import type { StorybookConfig } from '@storybook/react-vite';
-import path from 'node:path';
+import path, { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const config: StorybookConfig = {
   staticDirs: ['../public'],
@@ -27,8 +29,8 @@ const config: StorybookConfig = {
         ...config.resolve,
         alias: {
           ...config.resolve?.alias,
-          'src': path.resolve(dirname, '../src'),
-          'components/common': path.resolve(dirname, '../src/components/common/index.ts')
+          'src': path.resolve(__dirname, '../src'),
+          'components/common': path.resolve(__dirname, '../src/components/common/index.ts')
         }
       }
     };

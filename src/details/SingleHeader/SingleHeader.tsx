@@ -54,7 +54,7 @@ export const SingleHeader: FC<SingleHeaderProps> = ({
     }
 
     return (
-        <div className={classes} onClick={handleClick}
+        <th className={classes} onClick={handleClick}
             style={typeof index === 'number' ? { gridColumn: index } : {}}>
             <div className={detailsStyles.headerContainer}>
                 <span className={detailsStyles.headerName}>{column.label}</span>
@@ -69,6 +69,6 @@ export const SingleHeader: FC<SingleHeaderProps> = ({
                         className={detailsStyles.headerRemove} onClick={handleRemove}>close</button>
                 }
             </div>
-        </div>
+        </th>
     )
 }

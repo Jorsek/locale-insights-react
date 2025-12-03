@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { insightsSummaryApi } from '../src/state/insightsSummaryApi';
 import { insightsDetailsApi } from '../src/state/insightDetailsApi';
-import { activeLocalesApi } from '../src/state/activeLocalesApi';
+import { simpleApis } from '../src/state/activeLocalesApi';
 import { initialize, mswLoader } from 'msw-storybook-addon';
 import { handlers } from './mocks/handlers';
 
@@ -16,13 +16,13 @@ const createStorybookStore = () => configureStore({
   reducer: {
     [insightsDetailsApi.reducerPath]: insightsDetailsApi.reducer,
     [insightsSummaryApi.reducerPath]: insightsSummaryApi.reducer,
-    [activeLocalesApi.reducerPath]: activeLocalesApi.reducer,
+    [simpleApis.reducerPath]: simpleApis.reducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware().concat(
       insightsDetailsApi.middleware,
       insightsSummaryApi.middleware,
-      activeLocalesApi.middleware
+      simpleApis.middleware
     );
   }
 });

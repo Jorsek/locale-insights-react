@@ -1,0 +1,48 @@
+.container {
+    overflow-x: auto;
+    overflow-y: auto;
+    flex-grow: 1;
+    min-height: 0;
+}
+
+.details {
+    display: grid;
+    grid-template-rows: max-content;
+    font-size: .8rem;
+    min-width: 100%;
+    justify-items: stretch;
+}
+
+table.details {
+    display: grid;
+    table-layout: fixed;
+    border-collapse: collapse;
+    min-width: 100%;
+}
+
+table.details thead,
+table.details tbody,
+table.details tr {
+    display: contents;
+}
+
+table.details th {
+    position: sticky;
+    top: 0;
+    background-color: white;
+}
+
+table.details tbody>tr:hover {
+    background-color: argb(0, 0, 0, .12);
+}
+
+.cell {
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-bottom: 1px solid rgba(0, 0, 0, .05);
+    padding: .33em 1em;
+    align-items: center;
+    justify-content: flex-start;
+}

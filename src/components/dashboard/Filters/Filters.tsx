@@ -84,10 +84,6 @@ export const Filters: FC<FiltersProps> = ({ className }) => {
             removeFilter: filterId => {
                 console.log("remove filter", filterId, activeFilters);
                 if (activeFilters.find(id => id === filterId)) {
-                    const reportFiler = allFilters.find(rf => rf.id === filterId);
-                    if (typeof reportFiler?.cleanup === 'function') {
-                        reportFiler.cleanup(contextValue)
-                    }
                     dispatch(setActiveFilters(
                         activeFilters.filter(id => id !== filterId)
                     ))

@@ -1,113 +1,292 @@
 {
-  "defaultFilters": {},
-  "defaultCallouts": [
-    "localized-files",
-    "locales",
-    "inprogress-jobs"
-  ],
-  "defaultSort": {
-    "filename": "asc"
-  },
-  "defaultActiveFilters": [
-    "locale",
-    "resource-status"
-  ],
-  "resourceStatusLabels": {
-    "CURRENT": "Current",
-    "MISSING": "Missing",
-    "OUTDATED": "Out-of-date"
-  },
-  "jobStatusLabels": {
-    "ACTIVE": "Active",
-    "COMPLETED": "Completed",
-    "OVERDIE": "Completed",
-    "CANCELLED": "Cancelled"
-  },
-  "filters": {
-    "resource-status": {
-      "label": "L10N Status:",
-      "name": "Localization Status",
-      "type": "select",
-      "key": "localizationStatus",
-      "all": "All Statuses",
-      "values": [
-        {
-          "value": "CURRENT",
-          "label": "Current"
-        },
-        {
-          "value": "MISSING",
-          "label": "Missing"
-        },
-        {
-          "value": "OUTDATED",
-          "label": "Out-of-date"
-        }
-      ]
+    "defaultFilters": {},
+    "defaultCallouts": [
+        "localized-files",
+        "locales",
+        "inprogress-jobs"
+    ],
+    "defaultSort": {
+        "filename": "asc"
     },
-    "job-0status": {
-      "label": "Job Status:",
-      "name": "Job Status",
-      "type": "select",
-      "key": "jobStatus",
-      "all": "All Statuses",
-      "values": [
-        {
-          "value:": "ACTIVE",
-          "label": "Active"
-        },
-        {
-          "value:": "COMPLETED",
-          "label": "Completed"
-        },
-        {
-          "value:": "OVERDUE",
-          "label": "Overdue"
-        },
-        {
-          "value:": "CANCELLED",
-          "label": "Cancelled"
-        }
-      ]
+    "defaultActiveFilters": [
+        "locale",
+        "resource-status"
+    ],
+    "defaultColumns": [
+        "filename",
+        "title",
+        "map",
+        "locale",
+        "jobs",
+        "resource-status",
+        "is-valid"
+    ],
+    "resourceStatusLabels": {
+        "CURRENT": "Current",
+        "MISSING": "Missing",
+        "OUTDATED": "Out-of-date"
     },
-    "due": {
-      "type": "select",
-      "label": "Due:",
-      "name": "Due",
-      "key": "due",
-      "all": "All Dates",
-      "values": [
-        {
-          "label": "Overdue",
-          "valie": "OVERDUE"
-        },
-        {
-          "label": "This Week",
-          "value": "THIS_WEEK"
-        },
-        {
-          "label": "This Month",
-          "value": "THIS_MONTH"
-        }
-      ]
+    "jobStatusLabels": {
+        "ACTIVE": "Active",
+        "COMPLETED": "Completed",
+        "OVERDIE": "Completed",
+        "CANCELLED": "Cancelled"
     },
-    "is-valid": {
-      "name": "Content Validity",
-      "label": "Content:",
-      "type": "select",
-      "metadata": true,
-      "key": "is-valid",
-      "all": true,
-      "values": [
-        {
-          "label": "Invalid",
-          "value": true
+    "filters": {
+        "resource-status": {
+            "label": "L10N Status:",
+            "name": "Localization Status",
+            "type": "select",
+            "key": "localizationStatus",
+            "all": "All Statuses",
+            "values": [
+                {
+                    "value": "CURRENT",
+                    "label": "Current"
+                },
+                {
+                    "value": "MISSING",
+                    "label": "Missing"
+                },
+                {
+                    "value": "OUTDATED",
+                    "label": "Out-of-date"
+                }
+            ]
         },
-        {
-          "label": "valid",
-          "value": false
+        "job-0status": {
+            "label": "Job Status:",
+            "name": "Job Status",
+            "type": "select",
+            "key": "jobStatus",
+            "all": "All Statuses",
+            "values": [
+                {
+                    "value:": "ACTIVE",
+                    "label": "Active"
+                },
+                {
+                    "value:": "COMPLETED",
+                    "label": "Completed"
+                },
+                {
+                    "value:": "OVERDUE",
+                    "label": "Overdue"
+                },
+                {
+                    "value:": "CANCELLED",
+                    "label": "Cancelled"
+                }
+            ]
+        },
+        "due": {
+            "type": "select",
+            "label": "Due:",
+            "name": "Due",
+            "key": "due",
+            "all": "All Dates",
+            "values": [
+                {
+                    "label": "Overdue",
+                    "valie": "OVERDUE"
+                },
+                {
+                    "label": "This Week",
+                    "value": "THIS_WEEK"
+                },
+                {
+                    "label": "This Month",
+                    "value": "THIS_MONTH"
+                }
+            ]
+        },
+        "is-valid": {
+            "name": "Content Validity",
+            "label": "Content:",
+            "type": "select",
+            "metadata": true,
+            "key": "is-valid",
+            "all": true,
+            "values": [
+                {
+                    "label": "Invalid",
+                    "value": true
+                },
+                {
+                    "label": "valid",
+                    "value": false
+                }
+            ]
         }
-      ]
+    },
+    "columns": {
+        "filename": {
+            "type": "text",
+            "name": "File Name",
+            "width": "max(25em, 20%)",
+            "sort": "filename",
+            "removable": false,
+            "select": "filename"
+        },
+        "title": {
+            "type": "text",
+            "name": "Title",
+            "width": "max(15rem, 15%)",
+            "removable": true,
+            "select": "title",
+            "metadata": true
+        },
+        "map": {
+            "type": "text",
+            "name": "Map",
+            "width": "max(15%, 15rem)",
+            "sort": "mapFilename",
+            "removable": true,
+            "select": "mapFilename"
+        },
+        "due": {
+            "type": "date",
+            "name": "Due",
+            "width": 10,
+            "sort": "due",
+            "removable": true,
+            "select": "due"
+        },
+        "word-count": {
+            "name": "Word Count",
+            "type": "number",
+            "select": "word-count",
+            "width": 10,
+            "metadata": true,
+            "removable": true
+        },
+        "is-valid": {
+            "type": "chip",
+            "name": "Validitity",
+            "width": "max-content",
+            "removable": true,
+            "select": "is-valid",
+            "metadata": true,
+            "colors": {
+                "true": {
+                    "stroke": "rgba(21, 87, 36, .5)",
+                    "fill": "#d4edda",
+                    "text": "#155724",
+                    "label": "Valid"
+                },
+                "false": {
+                    "fill": "#f8d7da",
+                    "stroke": "rgba(114, 28, 36, .5)",
+                    "text": "#721c24",
+                    "label": "Invalid"
+                }
+            }
+        },
+        "resource-status": {
+            "type": "chip",
+            "name": "L10N Status",
+            "width": "max-content",
+            "removable": true,
+            "select": "localizationStatus",
+            "colors": {
+                "CURRENT": {
+                    "stroke": "rgba(21, 87, 36, .5)",
+                    "fill": "#d4edda",
+                    "text": "#155724",
+                    "label": "Current"
+                },
+                "OUTDATED": {
+                    "stroke": "rgba(133, 100, 4, .5)",
+                    "fill": "#fff3cd",
+                    "text": "#856404",
+                    "label": "Out-of-date"
+                },
+                "MISSING": {
+                    "stroke": "rgba(114, 28, 36, .5)",
+                    "fill": "#f8d7da",
+                    "text": "#721c24",
+                    "label": "Missing"
+                }
+            }
+        },
+        "file-status": {
+            "type": "chip",
+            "name": "File Status",
+            "width": "max-content",
+            "removable": true,
+            "select": "status",
+            "metadata": true,
+            "colors": {
+                "in_progress": {
+                    "stroke": "rgba(0, 0, 255, .5)",
+                    "fill": "#d0e0ff",
+                    "text": "#0000ff",
+                    "label": "In Progress"
+                },
+                "on_hold": {
+                    "stroke": "rgba(150, 150, 150, .5)",
+                    "fill": "#f0f0f0",
+                    "text": "#666666",
+                    "label": "On Hold"
+                },
+                "in_review": {
+                    "stroke": "rgba(255, 165, 0, .5)",
+                    "fill": "#ffe8b3",
+                    "text": "#ffa500",
+                    "label": "In Review"
+                },
+                "approved": {
+                    "stroke": "rgba(0, 128, 0, .5)",
+                    "fill": "#d4edda",
+                    "text": "#008000",
+                    "label": "Approved"
+                },
+                "needs_reevaluation": {
+                    "stroke": "rgba(180, 180, 0, .5)",
+                    "fill": "#ffffcc",
+                    "text": "#b3b300",
+                    "label": "Needs Reevaluation"
+                },
+                "obsoleted": {
+                    "stroke": "rgba(204, 0, 0, .5)",
+                    "fill": "#f8d7da",
+                    "text": "#cc0000",
+                    "label": "Obsoleted"
+                },
+                "authoring": {
+                    "stroke": "rgba(51, 63, 79, .5)",
+                    "fill": "#e3e7eb",
+                    "text": "#333F4F",
+                    "label": "Authoring"
+                }
+            }
+        },
+        "job-status": {
+            "type": "chip",
+            "name": "Job Status",
+            "width": "max-content",
+            "removable": true,
+            "select": "jobStatus",
+            "colors": {
+                "ACTIVE": {
+                    "stroke": "rgba(0, 0, 255, .5)",
+                    "fill": "#d0e0ff",
+                    "text": "#0000ff",
+                    "label": "Active"
+                },
+                "COMPLETED": {
+                    "stroke": "rgba(21, 87, 36, .5)",
+                    "fill": "#d4edda",
+                    "text": "#155724",
+                    "label": "Completed"
+                },
+                "CANCELLED": {
+                    "stroke": "rgba(114, 28, 36, .5)",
+                    "fill": "#f8d7da",
+                    "text": "#721c24",
+                    "label": "Cancelled"
+                }
+            }
+        }
     }
-  }
 }

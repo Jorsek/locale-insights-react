@@ -13,10 +13,10 @@ import * as filterContext from '../filterContext';
 
 // Mock jobs data
 const mockJobs = [
-    { id: 101, mapFilenme: 'map1.ditamap', status: 'COMPLETED' as const },
-    { id: 102, mapFilenme: 'map2.ditamap', status: 'ACTIVE' as const },
-    { id: 103, mapFilenme: 'map3.ditamap', status: 'CANCELLED' as const },
-    { id: 104, mapFilenme: 'map4.ditamap', status: 'COMPLETED' as const },
+    { id: 101, mapFilename: 'map1.ditamap', status: 'COMPLETED' as const },
+    { id: 102, mapFilename: 'map2.ditamap', status: 'ACTIVE' as const },
+    { id: 103, mapFilename: 'map3.ditamap', status: 'CANCELLED' as const },
+    { id: 104, mapFilename: 'map4.ditamap', status: 'COMPLETED' as const },
 ];
 
 // Mock the useFilter hook
@@ -131,9 +131,9 @@ describe('JobsFilter', () => {
         // Check for "All Jobs" option
         expect(screen.getByRole('option', { name: 'All Jobs' })).toBeInTheDocument();
 
-        // Check for each mock job
+        // Check for each mock job (format is "id (filename)")
         mockJobs.forEach(job => {
-            expect(screen.getByRole('option', { name: `${job.id} - ${job.mapFilenme}` })).toBeInTheDocument();
+            expect(screen.getByRole('option', { name: `${job.id} (${job.mapFilename})` })).toBeInTheDocument();
         });
     });
 
@@ -225,6 +225,9 @@ describe('JobsFilter', () => {
             expect(screen.getByRole('combobox')).toBeInTheDocument();
         });
 
+        // Clear mocks after component mounts (cleanup={true} may call clearFilter on mount)
+        vi.clearAllMocks();
+
         const select = screen.getByRole('combobox');
         await user.selectOptions(select, '[ALL]');
 
@@ -241,6 +244,9 @@ describe('JobsFilter', () => {
         await waitFor(() => {
             expect(screen.getByRole('combobox')).toBeInTheDocument();
         });
+
+        // Clear mocks after component mounts (cleanup={true} may call clearFilter on mount)
+        vi.clearAllMocks();
 
         const select = screen.getByRole('combobox');
 

@@ -10,7 +10,6 @@ export interface ReportFilter {
     name: string,
     removable?: boolean,
     component: ReactNode | null,
-    cleanup?: (filterContext: FilterContext) => void,
 }
 
 export const BUILT_IN: ReportFilter[] = [
@@ -25,7 +24,6 @@ export const BUILT_IN: ReportFilter[] = [
         name: 'Jobs',
         removable: true,
         component: <JobsFilter filterId="jobs" />,
-        cleanup: (context) => context.clearFilter('jobId', false)
     },
     {
         id: 'file-status',

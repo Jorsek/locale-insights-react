@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type { ResourceListResponse } from "../types";
+import type { PageInfo, ResourceListResponse } from "../types";
 import { config } from "src/config";
+import type { Filters } from "src/filters";
 
 interface DetailsParmeters {
   filter: Record<string, string | object>,
@@ -42,10 +43,23 @@ export const insightsDetailsApi = createApi({
   }),
 });
 
-export const selectResourceItems = (state: any, filter: Record<string, string | object>) =>
+export type Sort = Record<string, 'asc' | 'desc'>;
+
+export const selectResourceItems = (filter: Filters, sort: Sort) => (state: any) =>
   insightsDetailsApi.endpoints.getInsightDetails.select({
     filter,
-    sort: {}
-  })(state).data?.pages.flatMap(page => page.content) || [];
+    sort
+  })(state)?.data?.pages.flatMap(page => page.content) || [];
+
+export const selectlastPage = (filter: Filters, sort: Sort) => (state: any) =>
+  insightsDetailsApi.endpoints.getInsightDetails.select({
+    filter,
+    sort
+  })(state).data?.pages.at(-1)?.page ?? {
+    size: config.pageSize,
+    number: 0,
+    totalElements: 0,
+    totalPages: 0,
+  } as PageInfo
 
 export const { useGetInsightDetailsInfiniteQuery: useInsightDetails } = insightsDetailsApi;

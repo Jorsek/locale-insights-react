@@ -3,6 +3,45 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { DetailsHeader } from './DetailsHeader';
 import type { DetailColumn } from 'src/components/details/columns';
+import { columnsContext, type ColumnsContext } from '../columnsContext';
+import type { ReactNode } from 'react';
+
+// Helper to render with context
+interface RenderWithContextOptions {
+    columns: DetailColumn[];
+    sort?: Record<string, 'asc' | 'desc'>;
+    onRemove?: (columnId: string) => void;
+    onSetSort?: (column: string, direction: 'asc' | 'desc') => void;
+}
+
+const renderWithContext = ({
+    columns,
+    sort = {},
+    onRemove = vi.fn(),
+    onSetSort = vi.fn(),
+}: RenderWithContextOptions) => {
+    const mockContext: ColumnsContext = {
+        activeColumns: columns,
+        sort,
+        availableColumns: columns,
+        addColumn: vi.fn(),
+        removeColumn: onRemove,
+        setSort: onSetSort,
+    };
+
+    const wrapper = ({ children }: { children: ReactNode }) => (
+        <columnsContext.Provider value={mockContext}>
+            {children}
+        </columnsContext.Provider>
+    );
+
+    return {
+        ...render(<DetailsHeader />, { wrapper }),
+        mockContext,
+        onRemove,
+        onSetSort,
+    };
+};
 
 const mockColumns: DetailColumn[] = [
     {
@@ -63,262 +102,120 @@ const mockNumericWidthColumns: DetailColumn[] = [
 
 describe('DetailsHeader', () => {
     describe('Basic Rendering', () => {
-        it('renders a grid container', () => {
-            const { container } = render(
-                <DetailsHeader
-                    columns={mockColumns}
-                    sort={{}}
-                    onToggleDirection={vi.fn()}
-                />
-            );
-
-            const gridContainer = container.firstChild as HTMLElement;
-            expect(gridContainer).toBeInTheDocument();
-            expect(gridContainer.style.display).toBe('grid');
-        });
-
         it('renders correct number of header cells', () => {
-            render(
-                <DetailsHeader
-                    columns={mockColumns}
-                    sort={{}}
-                    onToggleDirection={vi.fn()}
-                />
-            );
+            renderWithContext({ columns: mockColumns });
 
             expect(screen.getByText('Column 1')).toBeInTheDocument();
             expect(screen.getByText('Column 2')).toBeInTheDocument();
             expect(screen.getByText('Column 3')).toBeInTheDocument();
         });
 
-        it('applies className to grid container when provided', () => {
-            const { container } = render(
-                <DetailsHeader
-                    columns={mockColumns}
-                    sort={{}}
-                    onToggleDirection={vi.fn()}
-                    className="custom-header-row"
-                />
-            );
+        it('renders headers for all active columns', () => {
+            renderWithContext({ columns: mockColumns });
 
-            const gridContainer = container.firstChild as HTMLElement;
-            expect(gridContainer).toHaveClass('custom-header-row');
+            // Verify all column labels are rendered
+            const columnLabels = mockColumns.map(col => col.label);
+            columnLabels.forEach(label => {
+                expect(screen.getByText(label)).toBeInTheDocument();
+            });
         });
     });
 
-    describe('Grid Layout', () => {
-        it('applies string widths to grid-template-columns', () => {
-            const { container } = render(
-                <DetailsHeader
-                    columns={mockColumns}
-                    sort={{}}
-                    onToggleDirection={vi.fn()}
-                />
-            );
-
-            const gridContainer = container.firstChild as HTMLElement;
-            expect(gridContainer.style.gridTemplateColumns).toBe('2fr 1fr auto');
-        });
-
-        it('converts numeric widths to em units', () => {
-            const { container } = render(
-                <DetailsHeader
-                    columns={mockNumericWidthColumns}
-                    sort={{}}
-                    onToggleDirection={vi.fn()}
-                />
-            );
-
-            const gridContainer = container.firstChild as HTMLElement;
-            expect(gridContainer.style.gridTemplateColumns).toBe('10em 20em');
-        });
-
-        it('applies auto width when width is undefined', () => {
-            const columnsWithoutWidth: DetailColumn[] = [
-                {
-                    id: 'no-width',
-                    label: 'No Width',
-                    render: vi.fn(),
-                },
-            ];
-
-            const { container } = render(
-                <DetailsHeader
-                    columns={columnsWithoutWidth}
-                    sort={{}}
-                    onToggleDirection={vi.fn()}
-                />
-            );
-
-            const gridContainer = container.firstChild as HTMLElement;
-            expect(gridContainer.style.gridTemplateColumns).toBe('auto');
-        });
-
-        it('handles different width types in same header', () => {
-            const mixedWidths: DetailColumn[] = [
-                { id: 'fr', label: 'Fr', width: '2fr', render: vi.fn() },
-                { id: 'em', label: 'Em', width: 15, render: vi.fn() },
-                { id: 'auto', label: 'Auto', width: 'auto', render: vi.fn() },
-                { id: 'none', label: 'None', render: vi.fn() },
-            ];
-
-            const { container } = render(
-                <DetailsHeader
-                    columns={mixedWidths}
-                    sort={{}}
-                    onToggleDirection={vi.fn()}
-                />
-            );
-
-            const gridContainer = container.firstChild as HTMLElement;
-            expect(gridContainer.style.gridTemplateColumns).toBe('2fr 15em auto auto');
-        });
-
-        it('handles empty columns array with default grid', () => {
-            const { container } = render(
-                <DetailsHeader
-                    columns={[]}
-                    sort={{}}
-                    onToggleDirection={vi.fn()}
-                />
-            );
-
-            const gridContainer = container.firstChild as HTMLElement;
-            expect(gridContainer.style.gridTemplateColumns).toBe('auto');
-        });
-    });
 
     describe('Sorting', () => {
         it('passes sort state to headers', () => {
-            render(
-                <DetailsHeader
-                    columns={mockColumns}
-                    sort={{ col1: 'asc' }}
-                    onToggleDirection={vi.fn()}
-                />
-            );
+            renderWithContext({
+                columns: mockColumns,
+                sort: { col1: 'asc' }
+            });
 
             // Check that Column 1 shows ascending indicator
             expect(screen.getByText('arrow_upward')).toBeInTheDocument();
         });
 
         it('displays multiple sort indicators', () => {
-            render(
-                <DetailsHeader
-                    columns={mockColumns}
-                    sort={{ col1: 'asc', col2: 'desc' }}
-                    onToggleDirection={vi.fn()}
-                />
-            );
+            renderWithContext({
+                columns: mockColumns,
+                sort: { col1: 'asc', col2: 'desc' }
+            });
 
             expect(screen.getByText('arrow_upward')).toBeInTheDocument();
             expect(screen.getByText('arrow_downward')).toBeInTheDocument();
         });
 
-        it('calls onToggleDirection when header is clicked', async () => {
+        it('calls setSort when header is clicked', async () => {
             const user = userEvent.setup();
-            const mockToggle = vi.fn();
+            const mockSetSort = vi.fn();
 
-            render(
-                <DetailsHeader
-                    columns={mockColumns}
-                    sort={{}}
-                    onToggleDirection={mockToggle}
-                />
-            );
+            renderWithContext({
+                columns: mockColumns,
+                onSetSort: mockSetSort
+            });
 
             const header = screen.getByText('Column 1').closest('div');
             await user.click(header!);
 
-            expect(mockToggle).toHaveBeenCalledWith(mockColumns[0], 'asc');
+            expect(mockSetSort).toHaveBeenCalledWith('col1', 'asc');
         });
 
         it('toggles sort direction on subsequent clicks', async () => {
             const user = userEvent.setup();
-            const mockToggle = vi.fn();
+            const mockSetSort = vi.fn();
 
-            render(
-                <DetailsHeader
-                    columns={mockColumns}
-                    sort={{ col1: 'asc' }}
-                    onToggleDirection={mockToggle}
-                />
-            );
+            renderWithContext({
+                columns: mockColumns,
+                sort: { col1: 'asc' },
+                onSetSort: mockSetSort
+            });
 
             const header = screen.getByText('Column 1').closest('div');
             await user.click(header!);
 
-            expect(mockToggle).toHaveBeenCalledWith(mockColumns[0], 'desc');
+            expect(mockSetSort).toHaveBeenCalledWith('col1', 'desc');
         });
     });
 
     describe('Removable Columns', () => {
-        it('displays remove buttons for removable columns when onRemove is provided', () => {
-            render(
-                <DetailsHeader
-                    columns={mockRemovableColumns}
-                    sort={{}}
-                    onToggleDirection={vi.fn()}
-                    onRemove={vi.fn()}
-                />
-            );
+        it('displays remove buttons for removable columns', () => {
+            renderWithContext({
+                columns: mockRemovableColumns
+            });
 
             const removeButtons = screen.getAllByRole('button');
             expect(removeButtons).toHaveLength(2);
         });
 
-        it('does not display remove buttons when onRemove is not provided', () => {
-            render(
-                <DetailsHeader
-                    columns={mockRemovableColumns}
-                    sort={{}}
-                    onToggleDirection={vi.fn()}
-                />
-            );
-
-            const removeButtons = screen.queryAllByRole('button');
-            expect(removeButtons).toHaveLength(0);
-        });
-
-        it('calls onRemove when remove button is clicked', async () => {
+        it('calls removeColumn when remove button is clicked', async () => {
             const user = userEvent.setup();
             const mockRemove = vi.fn();
 
-            render(
-                <DetailsHeader
-                    columns={mockRemovableColumns}
-                    sort={{}}
-                    onToggleDirection={vi.fn()}
-                    onRemove={mockRemove}
-                />
-            );
+            renderWithContext({
+                columns: mockRemovableColumns,
+                onRemove: mockRemove
+            });
 
             const removeButtons = screen.getAllByRole('button');
             await user.click(removeButtons[0]);
 
-            expect(mockRemove).toHaveBeenCalledWith(mockRemovableColumns[0]);
+            expect(mockRemove).toHaveBeenCalledWith('removable1');
         });
 
-        it('passes onRemove to all headers', async () => {
+        it('calls removeColumn for each removable column', async () => {
             const user = userEvent.setup();
             const mockRemove = vi.fn();
 
-            render(
-                <DetailsHeader
-                    columns={mockRemovableColumns}
-                    sort={{}}
-                    onToggleDirection={vi.fn()}
-                    onRemove={mockRemove}
-                />
-            );
+            renderWithContext({
+                columns: mockRemovableColumns,
+                onRemove: mockRemove
+            });
 
             const removeButtons = screen.getAllByRole('button');
 
             await user.click(removeButtons[0]);
-            expect(mockRemove).toHaveBeenCalledWith(mockRemovableColumns[0]);
+            expect(mockRemove).toHaveBeenCalledWith('removable1');
 
             await user.click(removeButtons[1]);
-            expect(mockRemove).toHaveBeenCalledWith(mockRemovableColumns[1]);
+            expect(mockRemove).toHaveBeenCalledWith('removable2');
 
             expect(mockRemove).toHaveBeenCalledTimes(2);
         });
@@ -326,18 +223,11 @@ describe('DetailsHeader', () => {
 
     describe('Edge Cases', () => {
         it('handles empty columns array', () => {
-            const { container } = render(
-                <DetailsHeader
-                    columns={[]}
-                    sort={{}}
-                    onToggleDirection={vi.fn()}
-                />
-            );
+            const { container } = renderWithContext({
+                columns: []
+            });
 
-            const gridContainer = container.firstChild as HTMLElement;
             const headers = container.querySelectorAll('.header');
-
-            expect(gridContainer).toBeInTheDocument();
             expect(headers).toHaveLength(0);
         });
 
@@ -346,17 +236,11 @@ describe('DetailsHeader', () => {
                 { id: 'single', label: 'Single', width: '100%', render: vi.fn() },
             ];
 
-            const { container } = render(
-                <DetailsHeader
-                    columns={singleColumn}
-                    sort={{}}
-                    onToggleDirection={vi.fn()}
-                />
-            );
+            renderWithContext({
+                columns: singleColumn
+            });
 
             expect(screen.getByText('Single')).toBeInTheDocument();
-            const gridContainer = container.firstChild as HTMLElement;
-            expect(gridContainer.style.gridTemplateColumns).toBe('100%');
         });
 
         it('handles many columns', () => {
@@ -367,41 +251,21 @@ describe('DetailsHeader', () => {
                 render: vi.fn(),
             }));
 
-            const { container } = render(
-                <DetailsHeader
-                    columns={manyColumns}
-                    sort={{}}
-                    onToggleDirection={vi.fn()}
-                />
-            );
+            renderWithContext({
+                columns: manyColumns
+            });
 
-            const gridContainer = container.firstChild as HTMLElement;
             expect(screen.getByText('Column 0')).toBeInTheDocument();
             expect(screen.getByText('Column 19')).toBeInTheDocument();
-
-            // Check that grid template has 20 columns
-            const gridColumns = gridContainer.style.gridTemplateColumns.split(' ');
-            expect(gridColumns).toHaveLength(20);
         });
     });
 
     describe('Integration', () => {
         it('renders complete header structure', () => {
-            const { container } = render(
-                <DetailsHeader
-                    columns={mockColumns}
-                    sort={{ col1: 'asc' }}
-                    onToggleDirection={vi.fn()}
-                    className="test-class"
-                />
-            );
-
-            const gridContainer = container.firstChild as HTMLElement;
-
-            // Check structure
-            expect(gridContainer).toHaveClass('test-class');
-            expect(gridContainer.style.display).toBe('grid');
-            expect(gridContainer.style.gridTemplateColumns).toBe('2fr 1fr auto');
+            renderWithContext({
+                columns: mockColumns,
+                sort: { col1: 'asc' }
+            });
 
             // Check content
             expect(screen.getByText('Column 1')).toBeInTheDocument();
@@ -412,17 +276,15 @@ describe('DetailsHeader', () => {
 
         it('combines sorting and removal functionality', async () => {
             const user = userEvent.setup();
-            const mockToggle = vi.fn();
+            const mockSetSort = vi.fn();
             const mockRemove = vi.fn();
 
-            render(
-                <DetailsHeader
-                    columns={mockRemovableColumns}
-                    sort={{ rem1: 'desc' }}
-                    onToggleDirection={mockToggle}
-                    onRemove={mockRemove}
-                />
-            );
+            renderWithContext({
+                columns: mockRemovableColumns,
+                sort: { rem1: 'desc' },
+                onSetSort: mockSetSort,
+                onRemove: mockRemove
+            });
 
             // Check sort indicator
             expect(screen.getByText('arrow_downward')).toBeInTheDocument();
@@ -430,27 +292,20 @@ describe('DetailsHeader', () => {
             // Click to toggle sort
             const header = screen.getByText('Removable 1').closest('div');
             await user.click(header!);
-            expect(mockToggle).toHaveBeenCalledWith(mockRemovableColumns[0], 'asc');
+            expect(mockSetSort).toHaveBeenCalledWith('rem1', 'asc');
 
             // Click remove button
             const removeButton = screen.getAllByRole('button')[0];
             await user.click(removeButton);
-            expect(mockRemove).toHaveBeenCalledWith(mockRemovableColumns[0]);
+            expect(mockRemove).toHaveBeenCalledWith('removable1');
         });
 
-        it('renders correctly with all optional props', () => {
-            const { container } = render(
-                <DetailsHeader
-                    columns={mockRemovableColumns}
-                    sort={{ rem1: 'asc', rem2: 'desc' }}
-                    onToggleDirection={vi.fn()}
-                    onRemove={vi.fn()}
-                    className="custom-class"
-                />
-            );
+        it('renders correctly with all features', () => {
+            renderWithContext({
+                columns: mockRemovableColumns,
+                sort: { rem1: 'asc', rem2: 'desc' }
+            });
 
-            const gridContainer = container.firstChild as HTMLElement;
-            expect(gridContainer).toHaveClass('custom-class');
             expect(screen.getByText('arrow_upward')).toBeInTheDocument();
             expect(screen.getByText('arrow_downward')).toBeInTheDocument();
             expect(screen.getAllByRole('button')).toHaveLength(2);

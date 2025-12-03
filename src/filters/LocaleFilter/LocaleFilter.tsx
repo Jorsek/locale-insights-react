@@ -1,4 +1,4 @@
-import { useState, type MouseEvent, type FC, useDeferredValue } from 'react';
+import { useState, useRef, useEffect, type MouseEvent, type FC, useDeferredValue } from 'react';
 import { useActiveLocalesQuery } from 'src/state/activeLocalesApi';
 import { useFilter } from '../filterContext';
 import { Popup, type PopupItem } from 'src/common/Popup';
@@ -14,6 +14,7 @@ interface LocaleFilterProps {
 export const LocaleFilter: FC<LocaleFilterProps> = ({
     className,
 }) => {
+    const containerRef = useRef<HTMLSpanElement>(null);
     const [showPopup, setShowPopup] = useState(false);
     const { data: activeLocales, isLoading, isError } = useActiveLocalesQuery();
     const { currentFilters, updateFilter, clearFilter } = useFilter();
@@ -28,6 +29,26 @@ export const LocaleFilter: FC<LocaleFilterProps> = ({
         event.preventDefault();
         setShowPopup(!showPopup);
     };
+
+    const handleClosePopup = () => {
+        setShowPopup(false);
+    };
+
+    // Custom click-outside handler that includes trigger elements
+    useEffect(() => {
+        if (!showPopup) return;
+
+        const handleClickOutside = (event: Event) => {
+            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+                setShowPopup(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showPopup]);
 
     const handleItemSelected = (id: string) => {
         if (id === '[ALL]') {
@@ -96,20 +117,22 @@ export const LocaleFilter: FC<LocaleFilterProps> = ({
     ];
 
     return (
-        <span className={classNames(styles.localeFilter, className)} onClick={handleTogglePopup}>
+        <span ref={containerRef} className={classNames(styles.localeFilter, className)}>
             <div className={styles.label}>
                 Locale(s):
             </div>
             <div
-                className={styles.trigger}>
+                className={styles.trigger}
+                onClick={handleTogglePopup}>
                 {getDisplayText()}
             </div>
-            <span className={styles.dropdownIcon}>
+            <span className={styles.dropdownIcon}
+                onClick={handleTogglePopup}>
                 {showPopup ? 'arrow_drop_up' : 'arrow_drop_down'}
             </span>
             <Popup
                 show={showPopup}
-                onClose={() => setShowPopup(false)}
+                onClose={undefined}
                 className={styles.popup}
                 items={popupItems}
                 onItemSelected={handleItemSelected}

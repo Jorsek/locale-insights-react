@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeAll, afterEach, afterAll } from 'vitest';
+import { describe, it, expect, vi, beforeAll, afterEach, afterAll, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
@@ -8,7 +8,6 @@ import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
 import { LocaleFilter } from './LocaleFilter';
 import * as activeLocalesApiModule from '../../state/activeLocalesApi';
-import { config } from '../../config';
 import * as filterContext from '../filterContext';
 
 // Mock locales data
@@ -62,11 +61,11 @@ beforeEach(() => {
         activeFilters: [],
         updateFilter: mockUpdateFilter,
         clearFilter: mockClearFilter,
-        clearFilterIfNotActive: vi.fn(),
         applyFilter: vi.fn(),
         resetFilter: vi.fn(),
         addFilter: vi.fn(),
         removeFilter: vi.fn(),
+        isActive: vi.fn(),
     });
 });
 
@@ -120,20 +119,14 @@ describe('LocaleFilter', () => {
         });
     });
 
-    it('renders select dropdown with locales after successful API fetch', async () => {
+    it('renders button trigger with "All Locales" after successful API fetch', async () => {
         renderWithProviders(<LocaleFilter />);
 
         await waitFor(() => {
-            expect(screen.getByRole('combobox')).toBeInTheDocument();
+            expect(screen.getByRole('button', { name: /All Locales/i })).toBeInTheDocument();
         });
 
-        // Check for "All Locales" option
-        expect(screen.getByRole('option', { name: 'All Locales' })).toBeInTheDocument();
-
-        // Check for each mock locale
-        mockLocales.forEach(locale => {
-            expect(screen.getByRole('option', { name: locale.displayName })).toBeInTheDocument();
-        });
+        expect(screen.getByText('Locale(s):')).toBeInTheDocument();
     });
 
     it('applies custom className when provided', async () => {
@@ -144,128 +137,219 @@ describe('LocaleFilter', () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByRole('combobox')).toBeInTheDocument();
+            expect(screen.getByRole('button', { name: /All Locales/i })).toBeInTheDocument();
         });
 
-        // During loading, className is applied to skeleton-container
-        // After loading, there's no section wrapper, so className isn't applied
+        const filterSpan = container.querySelector(`.${customClass}`);
+        expect(filterSpan).toBeInTheDocument();
     });
 
-    it('selects "All Locales" by default when no filter is set', async () => {
+    it('shows "All Locales" by default when no filter is set', async () => {
         renderWithProviders(<LocaleFilter />);
 
         await waitFor(() => {
-            expect(screen.getByRole('combobox')).toBeInTheDocument();
+            const button = screen.getByRole('button', { name: /All Locales/i });
+            expect(button).toBeInTheDocument();
         });
-
-        const select = screen.getByRole('combobox') as HTMLSelectElement;
-        expect(select.value).toBe('[ALL]');
     });
 
-    it('pre-selects the locale from currentFilters', async () => {
+    it('shows locale display name when single locale is selected', async () => {
         mockUseFilter.mockReturnValue({
-            currentFilters: { localeCode: 'fr' },
+            currentFilters: { locales: ['fr'] },
             activeFilters: [],
             updateFilter: mockUpdateFilter,
             clearFilter: mockClearFilter,
-            clearFilterIfNotActive: vi.fn(),
             applyFilter: vi.fn(),
             resetFilter: vi.fn(),
             addFilter: vi.fn(),
             removeFilter: vi.fn(),
+            isActive: vi.fn(),
         });
 
         renderWithProviders(<LocaleFilter />);
 
         await waitFor(() => {
-            expect(screen.getByRole('combobox')).toBeInTheDocument();
+            expect(screen.getByRole('button', { name: /French/i })).toBeInTheDocument();
         });
-
-        const select = screen.getByRole('combobox') as HTMLSelectElement;
-        expect(select.value).toBe('fr');
     });
 
-    it('calls updateFilter when a locale is selected', async () => {
-        const user = userEvent.setup();
-
-        renderWithProviders(<LocaleFilter />);
-
-        await waitFor(() => {
-            expect(screen.getByRole('combobox')).toBeInTheDocument();
-        });
-
-        const select = screen.getByRole('combobox');
-        await user.selectOptions(select, 'es');
-
-        expect(mockUpdateFilter).toHaveBeenCalledWith('localeCode', 'es', false);
-        expect(mockUpdateFilter).toHaveBeenCalledTimes(1);
-    });
-
-    it('calls clearFilter when "All Locales" is selected', async () => {
-        const user = userEvent.setup();
-
+    it('shows count when multiple locales are selected', async () => {
         mockUseFilter.mockReturnValue({
-            currentFilters: { localeCode: 'fr' },
+            currentFilters: { locales: ['en', 'es', 'fr'] },
             activeFilters: [],
             updateFilter: mockUpdateFilter,
             clearFilter: mockClearFilter,
-            clearFilterIfNotActive: vi.fn(),
             applyFilter: vi.fn(),
             resetFilter: vi.fn(),
             addFilter: vi.fn(),
             removeFilter: vi.fn(),
+            isActive: vi.fn(),
         });
 
         renderWithProviders(<LocaleFilter />);
 
         await waitFor(() => {
-            expect(screen.getByRole('combobox')).toBeInTheDocument();
+            expect(screen.getByRole('button', { name: /3 Locales/i })).toBeInTheDocument();
         });
-
-        const select = screen.getByRole('combobox');
-        await user.selectOptions(select, '[ALL]');
-
-        expect(mockClearFilter).toHaveBeenCalledWith('localeCode', false);
-        expect(mockClearFilter).toHaveBeenCalledTimes(1);
-        expect(mockUpdateFilter).not.toHaveBeenCalled();
     });
 
-    it('handles multiple locale selections correctly', async () => {
+    it('opens popup when button is clicked', async () => {
         const user = userEvent.setup();
 
         renderWithProviders(<LocaleFilter />);
 
         await waitFor(() => {
-            expect(screen.getByRole('combobox')).toBeInTheDocument();
+            expect(screen.getByRole('button', { name: /All Locales/i })).toBeInTheDocument();
         });
 
-        const select = screen.getByRole('combobox');
+        const button = screen.getByRole('button', { name: /All Locales/i });
+        await user.click(button);
 
-        // Select Spanish
-        await user.selectOptions(select, 'es');
-        expect(mockUpdateFilter).toHaveBeenCalledWith('localeCode', 'es', false);
-
-        // Select French
-        await user.selectOptions(select, 'fr');
-        expect(mockUpdateFilter).toHaveBeenCalledWith('localeCode', 'fr', false);
-
-        // Clear selection
-        await user.selectOptions(select, '[ALL]');
-        expect(mockClearFilter).toHaveBeenCalledWith('localeCode', false);
-
-        expect(mockUpdateFilter).toHaveBeenCalledTimes(2);
-        expect(mockClearFilter).toHaveBeenCalledTimes(1);
+        // Popup should show all locales
+        await waitFor(() => {
+            mockLocales.forEach(locale => {
+                expect(screen.getByText(locale.displayName)).toBeInTheDocument();
+            });
+        });
     });
 
-    it('renders label and select elements', async () => {
+    it('calls updateFilter when a locale is clicked in popup', async () => {
+        const user = userEvent.setup();
+
         renderWithProviders(<LocaleFilter />);
 
         await waitFor(() => {
-            expect(screen.getByRole('combobox')).toBeInTheDocument();
+            expect(screen.getByRole('button', { name: /All Locales/i })).toBeInTheDocument();
         });
 
-        expect(screen.getByText('Locale(s):')).toBeInTheDocument();
-        expect(screen.getByRole('combobox')).toBeInTheDocument();
+        // Open popup
+        const button = screen.getByRole('button', { name: /All Locales/i });
+        await user.click(button);
+
+        // Click Spanish locale
+        await waitFor(() => {
+            expect(screen.getByText('Spanish')).toBeInTheDocument();
+        });
+
+        const spanishOption = screen.getByText('Spanish');
+        await user.click(spanishOption);
+
+        expect(mockUpdateFilter).toHaveBeenCalledWith('locales', ['es'], false);
+    });
+
+    it('calls clearFilter when "All Locales" is clicked in popup', async () => {
+        const user = userEvent.setup();
+
+        mockUseFilter.mockReturnValue({
+            currentFilters: { locales: ['fr'] },
+            activeFilters: [],
+            updateFilter: mockUpdateFilter,
+            clearFilter: mockClearFilter,
+            applyFilter: vi.fn(),
+            resetFilter: vi.fn(),
+            addFilter: vi.fn(),
+            removeFilter: vi.fn(),
+            isActive: vi.fn(),
+        });
+
+        renderWithProviders(<LocaleFilter />);
+
+        await waitFor(() => {
+            expect(screen.getByRole('button', { name: /French/i })).toBeInTheDocument();
+        });
+
+        // Open popup
+        const button = screen.getByRole('button', { name: /French/i });
+        await user.click(button);
+
+        // Click "All Locales" option
+        await waitFor(() => {
+            expect(screen.getAllByText('All Locales').length).toBeGreaterThan(0);
+        });
+
+        const allLocalesOptions = screen.getAllByText('All Locales');
+        const popupAllLocales = allLocalesOptions.find(el => el.tagName === 'LI');
+        if (popupAllLocales) {
+            await user.click(popupAllLocales);
+        }
+
+        expect(mockClearFilter).toHaveBeenCalledWith('locales', false);
+    });
+
+    it('toggles selection when clicking selected locale', async () => {
+        const user = userEvent.setup();
+
+        mockUseFilter.mockReturnValue({
+            currentFilters: { locales: ['es'] },
+            activeFilters: [],
+            updateFilter: mockUpdateFilter,
+            clearFilter: mockClearFilter,
+            applyFilter: vi.fn(),
+            resetFilter: vi.fn(),
+            addFilter: vi.fn(),
+            removeFilter: vi.fn(),
+            isActive: vi.fn(),
+        });
+
+        renderWithProviders(<LocaleFilter />);
+
+        await waitFor(() => {
+            expect(screen.getByRole('button', { name: /Spanish/i })).toBeInTheDocument();
+        });
+
+        // Open popup
+        const button = screen.getByRole('button', { name: /Spanish/i });
+        await user.click(button);
+
+        // Click Spanish locale again (should deselect)
+        await waitFor(() => {
+            expect(screen.getAllByText('Spanish').length).toBeGreaterThan(0);
+        });
+
+        const spanishOptions = screen.getAllByText('Spanish');
+        const menuItemSpanish = spanishOptions.find(el => el.tagName === 'LI');
+        if (menuItemSpanish) {
+            await user.click(menuItemSpanish);
+        }
+
+        // Should clear filter since no locales remain selected
+        expect(mockClearFilter).toHaveBeenCalledWith('locales', false);
+    });
+
+    it('adds to selection when clicking unselected locale', async () => {
+        const user = userEvent.setup();
+
+        mockUseFilter.mockReturnValue({
+            currentFilters: { locales: ['es'] },
+            activeFilters: [],
+            updateFilter: mockUpdateFilter,
+            clearFilter: mockClearFilter,
+            applyFilter: vi.fn(),
+            resetFilter: vi.fn(),
+            addFilter: vi.fn(),
+            removeFilter: vi.fn(),
+            isActive: vi.fn(),
+        });
+
+        renderWithProviders(<LocaleFilter />);
+
+        await waitFor(() => {
+            expect(screen.getByRole('button')).toBeInTheDocument();
+        });
+
+        // Open popup
+        const button = screen.getByRole('button');
+        await user.click(button);
+
+        // Click French locale (should add to selection)
+        await waitFor(() => {
+            expect(screen.getByText('French')).toBeInTheDocument();
+        });
+
+        const frenchOption = screen.getByText('French');
+        await user.click(frenchOption);
+
+        expect(mockUpdateFilter).toHaveBeenCalledWith('locales', ['es', 'fr'], false);
     });
 
     it('handles empty locales array from API', async () => {
@@ -279,28 +363,7 @@ describe('LocaleFilter', () => {
         renderWithProviders(<LocaleFilter />);
 
         await waitFor(() => {
-            expect(screen.getByRole('combobox')).toBeInTheDocument();
+            expect(screen.getByRole('button', { name: /All Locales/i })).toBeInTheDocument();
         });
-
-        // Should still have "All Locales" option
-        expect(screen.getByRole('option', { name: 'All Locales' })).toBeInTheDocument();
-
-        // Should only have 1 option (All Locales)
-        const options = screen.getAllByRole('option');
-        expect(options).toHaveLength(1);
-    });
-
-    it('has correct id attributes for accessibility', async () => {
-        const { container } = renderWithProviders(<LocaleFilter />);
-
-        await waitFor(() => {
-            expect(screen.getByRole('combobox')).toBeInTheDocument();
-        });
-
-        const label = container.querySelector('label');
-        const select = container.querySelector('select');
-
-        expect(label).toHaveAttribute('id', 'label-localeCode');
-        expect(select).toHaveAttribute('id', 'control-localeCode');
     });
 });

@@ -1,4 +1,4 @@
-import type { InsightsResourceFilter, LocaleInsightsData, LoadingStatus } from "../types/locale-insights";
+import type { InsightsResourceFilter, LocaleInsightsData } from "../types/locale-insights";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const insightsSummaryApi = createApi({

@@ -3,7 +3,7 @@ import { useColumns } from "../columnsContext";
 import classNames from "classnames";
 import detailStyles from '../details.module.css';
 
-import { Popup, type PopupItem } from "src/common";
+import { Popup } from "src/common";
 
 export interface DetailActionsProps {
     className?: string;

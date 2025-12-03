@@ -1,30 +1,18 @@
 import classNames from 'classnames';
-import { useEffect, useMemo, useRef, useState, type FC, type MouseEvent } from 'react';
+import { useEffect, useMemo, useState, type FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllColumns, type DetailColumn } from 'src/components/details/columns';
 import { config } from 'src/config';
 import { selectFilters, selectSort, setSort } from 'src/state/configSlice';
 import { selectlastPage, selectResourceItems, useInsightDetails } from 'src/state/insightDetailsApi';
 import "./Details.css"
-import { DetailActions, DetailsHeader, DetailsStatus, DetailsTable } from 'src/details';
-import detailStyles from 'src/details/details.module.css';
+import { DetailActions, DetailsStatus, DetailsTable } from 'src/details';
 import { columnsContext, type ColumnsContext } from 'src/details/columnsContext';
 import type { DetailsContext } from 'src/details/detailsContext';
 import { detailsContext } from 'src/details/detailsContext';
 
 interface DetailsProps {
     className?: string;
-}
-
-function buildColumnWidths(columns: DetailColumn[]): string {
-    return columns.map(column => {
-        if (typeof column.width === 'number') {
-            return `${column.width}em`;
-        } else if (typeof column.width === 'string') {
-            return column.width;
-        }
-        return 'auto';
-    }).join(' ');
 }
 export const Details: FC<DetailsProps> = ({ className }) => {
     const filter = useSelector(selectFilters);
@@ -33,7 +21,7 @@ export const Details: FC<DetailsProps> = ({ className }) => {
     const page = useSelector(selectlastPage(filter, sort));
 
     const [activeColumns, setActiveColumns] = useState(config.defaultColumns);
-    const { data, isLoading, hasNextPage, fetchNextPage, isFetching, isError } = useInsightDetails({ sort, filter });
+    const { isLoading, hasNextPage, fetchNextPage, isFetching, isError } = useInsightDetails({ sort, filter });
     const [columns, setColumns] = useState<DetailColumn[]>([]);
     const dispatch = useDispatch();
 

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { DetailsStatus } from './DetailsStatus';
 import { detailsContext, type DetailsContext } from '../detailsContext';
-import type { ResourceItem, PageInfo } from 'src/types';
+import type { ResourceItem } from 'src/types';
 import { useState, useEffect } from 'react';
 
 const meta = {

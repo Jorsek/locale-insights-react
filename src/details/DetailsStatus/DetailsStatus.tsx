@@ -15,7 +15,6 @@ export const DetailsStatus: FC<DetailsStatusProps> = ({
     const containerClass = classNames(styles.container, className);
 
     const currentPage = page.number + 1;
-    const loaded = Math.min(page.totalElements, ((page.number + 1) * page.size));
 
     useEffect(() => {
         if (isFetching) {

@@ -1,7 +1,6 @@
-import { useEffect, useState, type FC } from 'react';
+import type { FC } from 'react';
 import { CalloutInsight } from '../../common/CalloutInsight/CalloutInsight';
-import type { LocaleInsightSummaryReport } from 'src/types';
-import { CALLOUT_REPORTS, DEFAULT_REPORTS } from './calloutRepots';
+import { CALLOUT_REPORTS } from './calloutRepots';
 import classNames from 'classnames';
 import '../dashboard.css'
 import { useGetSummaryQuery } from 'src/state/insightsSummaryApi';

@@ -8,7 +8,7 @@ interface DashboardProps {
     className?: string;
 }
 
-export const Dashboard: FC<DashboardProps> = ({ className }) => {
+export const Dashboard: FC<DashboardProps> = () => {
     return (
         <>
             <h1>Localization Dashboard</h1>

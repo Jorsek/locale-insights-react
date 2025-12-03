@@ -1,9 +1,7 @@
-import { cloneElement, createElement, type ReactNode } from "react";
+import { createElement, type ReactNode } from "react";
 import type { ResourceItem } from "../../types";
-import { ResourceStatusChip } from "../common";
 import { config, type ChipColumnDefinition, type SimpleColumnDefintion } from "src/config";
-import { logRoles } from "@testing-library/react";
-import { Chip, StaticChip } from "src/common";
+import { StaticChip } from "src/common";
 
 export interface DetailColumn {
     id: string,

@@ -96,17 +96,15 @@ export const LocaleFilter: FC<LocaleFilterProps> = ({
     ];
 
     return (
-        <span className={classNames(styles.localeFilter, className)}>
+        <span className={classNames(styles.localeFilter, className)} onClick={handleTogglePopup}>
             <div className={styles.label}>
                 Locale(s):
             </div>
             <div
-                className={styles.trigger}
-                onClick={handleTogglePopup}>
+                className={styles.trigger}>
                 {getDisplayText()}
             </div>
-            <span className={styles.dropdownIcon}
-                onClick={handleTogglePopup}>
+            <span className={styles.dropdownIcon}>
                 {showPopup ? 'arrow_drop_up' : 'arrow_drop_down'}
             </span>
             <Popup

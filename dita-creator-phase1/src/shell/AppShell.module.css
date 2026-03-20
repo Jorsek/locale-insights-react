@@ -1,0 +1,27 @@
+.shell {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 260px;
+  border-right: 1px solid #e0e0e0;
+  overflow-y: auto;
+  background: #fafafa;
+  flex-shrink: 0;
+}
+
+.main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #888;
+}

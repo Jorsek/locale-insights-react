@@ -1,0 +1,62 @@
+.sidebar {
+  padding: 0.5rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem 0.5rem;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 0.5rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.collapseBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: #666;
+  padding: 0.25rem;
+}
+
+.status {
+  padding: 0.5rem;
+  color: #888;
+  font-size: 0.8125rem;
+}
+
+.treeNode {
+  font-size: 0.8125rem;
+}
+
+.nodeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  width: 100%;
+  text-align: left;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.nodeButton:hover {
+  background: #e8e8e8;
+}
+
+.icon {
+  flex-shrink: 0;
+}
+
+.children {
+  padding-left: 1rem;
+}

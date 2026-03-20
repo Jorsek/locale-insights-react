@@ -1,0 +1,29 @@
+.toggle {
+  display: flex;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.btn {
+  padding: 0.25rem 0.75rem;
+  border: none;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  color: #555;
+}
+
+.btn:not(:last-child) {
+  border-right: 1px solid #d0d0d0;
+}
+
+.btn:hover {
+  background: #f0f0f0;
+}
+
+.active {
+  background: #e3f2fd;
+  color: #1976d2;
+  font-weight: 500;
+}
